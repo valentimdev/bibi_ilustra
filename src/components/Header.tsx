@@ -23,7 +23,7 @@ function Header() {
         backgroundRepeat: 'no-repeat',
       }}
     >
-      <nav className="container mx-auto flex flex-row items-center justify-between p-2 h-24 m-0">
+      <nav className="w-full mx-auto flex flex-row items-center justify-between p-2 h-24 px-8">
         <div className="flex flex-col  w-30 justify-center items-center">
           <Link href="/about">
             <p>ABOUT</p>
