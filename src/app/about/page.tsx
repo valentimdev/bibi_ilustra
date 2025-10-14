@@ -68,7 +68,7 @@ export default function About() {
         <h2 className="text-4xl font-bold text-pink-500 mb-8 text-center">
           FORMAÇÃO
         </h2>
- {/* Container principal com as duas colunas */}
+       {/* Container principal com as duas colunas */}
           <div className="max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row  gap-20 md:gap-40 ">
           
