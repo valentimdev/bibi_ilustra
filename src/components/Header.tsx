@@ -1,34 +1,106 @@
+'use client';
+
+import { useState } from 'react';
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 // import Katty from '@/public/bianca_katty_logo.svg'
 function Header() {
+  const [logoSrc, setLogoSrc] = useState('/logos/bianca_katty_logo.svg');
+  const handleMouseEnter = () => {
+    setLogoSrc('/logos/bianca_katty_logo_gif.gif');
+  };
+  const handleMouseLeave = () => {
+    setLogoSrc('/logos/bianca_katty_logo.svg');
+  };
   return (
-  <header
-
+    <header
       className="w-full"
-      style={{ backgroundColor: 'var(--primary)' }}
+      style={{
+        backgroundImage: `url('/textures/textura_header.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
     >
+      <nav className="container mx-auto flex flex-row items-center justify-between p-2 h-24 m-0">
+        <div className="flex flex-col  w-30 justify-center items-center">
+          <Link href="/about">
+            <p>ABOUT</p>
+          </Link>
 
-      <nav className="container mx-auto flex flex-row items-center justify-between p-2 h-24">
+          <Link href="/">
+            <p>WORK</p>
+          </Link>
 
-        <div className="flex flex-col border border-black w-30">
-          <p>sobre mim</p>
-          <p>blablabla</p>
-          <p>bibi</p>
+          <Link href="/">
+            <p>CONTACT</p>
+          </Link>
         </div>
 
-
-        <div>            
-            <Image src="/logos/bianca_katty_logo.svg" alt="Logo" width={300} height={50} />
-        </div>
-
-        
         <div>
+          <Link
+            href="/"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <Image
+              src={logoSrc}
+              alt="Logo"
+              width={300}
+              height={50}
+              unoptimized={true}
+            />
+          </Link>
+        </div>
 
-          <ul className='flex flex-row border '>
-            <li className=''><Image src="/icons/behance.svg" alt="Behance" width={40} height={50}></Image></li>
-            <li className=''><Image src="/icons/ig.svg" alt="Instagram" width={40} height={50}></Image></li>
-            <li className=''><Image src="/icons/linkedin.svg" alt="WhatsApp" width={40} height={50}></Image></li>
+        <div>
+          <ul className="flex flex-row gap-2">
+            <li>
+              <a
+                href="https://www.behance.net/biannca_mo7ac9"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src="/icons/behance.svg"
+                  alt="Behance"
+                  width={40}
+                  height={50}
+                  className="cursor-pointer"
+                />
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.instagram.com/arttbit?igsh=aTJzN2J2YmJqc3V0&utm_source=qr"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src="/icons/ig.svg"
+                  alt="Instagram"
+                  width={40}
+                  height={50}
+                  className="cursor-pointer"
+                />
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.linkedin.com/in/bianca-tavares-388876221?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src="/icons/linkedin.svg"
+                  alt="LinkedIn"
+                  width={40}
+                  height={50}
+                  className="cursor-pointer"
+                />
+              </a>
+            </li>
           </ul>
         </div>
       </nav>
