@@ -54,7 +54,7 @@ const artworks: Artwork[] = [
 // É uma boa prática para definir componentes em TypeScript.
 const ArtGallery: React.FC = () => {
   return (
-    <main className=" py-16 px-4 sm:px-8">
+    <main className="px-4 sm:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Título da Seção */}
         <div className="text-center mb-12 text-black flex flex-row justify-center gap-10">
