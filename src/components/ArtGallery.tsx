@@ -107,7 +107,7 @@ const ArtGallery: React.FC = () => {
                         alt={art.title}
                         fill
                         sizes="(max-width: 1024px) 50vw, 25vw"
-                        className="transition-transform duration-500 ease-in-out object-cover"
+                        className="transition-transform duration-500 ease-in-out object-cover rounded-md"
                       />
 
                       <div className="absolute inset-0 bg-black bg-opacity-60 flex items-end p-6 opacity-0 group-hover:opacity-60 transition-opacity duration-300">
@@ -140,7 +140,7 @@ const ArtGallery: React.FC = () => {
                         alt={art.title}
                         fill
                         sizes="(max-width: 1024px) 50vw, 25vw"
-                        className="transition-transform duration-500 ease-in-out object-cover"
+                        className="transition-transform duration-500 ease-in-out object-cover rounded-md"
                       />
 
                       <div className="absolute inset-0 bg-black bg-opacity-60 flex items-end p-6 opacity-0 group-hover:opacity-60 transition-opacity duration-300">

@@ -4,19 +4,19 @@ export default function About() {
   return (
     <div className="flex flex-col w-full h-full py-12  gap-16 border border-black">
       {/* Primeira seção - imagem 3/5 à esquerda, texto 2/5 à direita */}
-      <div className="flex flex-col md:flex-row md:gap-35 md:items-center max-w-8xl mx-auto">
+      <div className="flex flex-col md:flex-row md:gap-35 md:items-center max-w-8xl px-10">
         <div className="w-full md:w-3/7 mb-8 md:mb-0">
           <div className="bg-black w-full h-full md:h-120 rounded-lg"></div>{' '}
           {/* Placeholder para a imagem */}
         </div>
 
-        <div className="w-full md:w-4/7">
-          <h2 className="text-4xl font-bold text-pink-500 mb-4">
+        <div className="w-full md:w-4/7 border border-black md:px-16">
+          <h2 className="text-3xl font-bold text-[#EC2677] mb-4">
             Oi, Sou Bianca Tavares!
           </h2>
 
           <div className="text-gray-700 leading-relaxed space-y-4">
-            <p>
+            <p className='font-semibold text-2xl'>
               Minha trajetória profissional desde 2019 se baseia na fusão entre
               ilustração e design. Meu portfólio é altamente versátil,
               abrangendo os mercados editorial, de games, branding e
@@ -35,7 +35,7 @@ export default function About() {
               envolventes e estrategicamente sólidos, sempre preservando a
               autenticidade e o brilho próprio de cada criação.
             </p>
-            <p className="text-pink-500 font-bold">Vamos criar?</p>
+            <p className="text-[#EC2677] text-2xl font-bold">Vamos criar?</p>
           </div>
         </div>
       </div>
@@ -64,7 +64,7 @@ export default function About() {
       </div> */}
 
       {/* Terceira seção - Formação e Cursos */}
-      <div className="max-w-8xl mx-auto w-full flex flex-col  border border-black">
+      <div className="max-w-8xl mx-auto w-full flex flex-col  border border-black px-10">
         <h2 className="text-4xl font-bold text-pink-500 mb-8 text-center">
           FORMAÇÃO
         </h2>
