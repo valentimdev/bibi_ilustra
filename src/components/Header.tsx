@@ -23,8 +23,9 @@ function Header() {
         backgroundRepeat: 'no-repeat',
       }}
     >
-      <nav className="w-full mx-auto flex flex-row items-center justify-between p-2 h-24 px-8">
-        <div className="flex flex-col  w-30 justify-center items-center">
+      <nav className="max-w-8xl mx-10 grid grid-cols-3 items-center h-24 px-4 sm:px-6 lg:px-8">
+        {/* Coluna 1: Links de navegação */}
+        <div className="hidden md:flex flex-row justify-start items-center gap-3">
           <Link href="/about">
             <p>ABOUT</p>
           </Link>
@@ -38,7 +39,8 @@ function Header() {
           </Link>
         </div>
 
-        <div>
+        {/* Coluna 2: Logo centralizada */}
+        <div className="flex justify-center items-center">
           <Link
             href="/"
             onMouseEnter={handleMouseEnter}
@@ -54,7 +56,8 @@ function Header() {
           </Link>
         </div>
 
-        <div>
+        {/* Coluna 3: Ícones sociais */}
+        <div className="hidden md:flex justify-end">
           <ul className="flex flex-row gap-2">
             <li>
               <a
