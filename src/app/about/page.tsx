@@ -1,21 +1,28 @@
+import Image from 'next/image';
 import React from 'react';
 
 export default function About() {
   return (
     <div className="flex flex-col w-full h-full py-12  gap-16 ">
-      <div className="flex flex-col md:flex-row md:gap-35 md:items-center max-w-8xl px-10">
-        <div className="w-full md:w-3/7 mb-8 md:mb-0">
-          <div className="bg-black w-full h-full md:h-120 rounded-lg"></div>{' '}
-          {/* Placeholder para a imagem */}
-        </div>
+      <div className="flex flex-col md:flex-row md:gap-16 md:items-center max-w-8xl px-10">
+        <div className="w-full md:w-2/5 relative mb-8 md:mb-0">
 
-        <div className="w-full md:w-4/7  md:px-16">
-          <h2 className="text-3xl font-bold text-[#EC2677] mb-4">
-            Oi, Sou Bianca Tavares!
+          <div className="aspect-[5/5] rounded-lg overflow-hidden">
+            <Image
+              src="/images/bibi_foto.jpg" 
+              alt="Foto de Bianca Tavares"
+              fill
+              className="object-cover" 
+            />
+          </div>
+        </div>
+        <div className="w-full md:w-3/5  md:px-16">
+          <h2 className="text-3xl font-bold text-[#12487F] mb-4">
+            Oi, Sou <span className='text-[var(--primary)]'>Bianca Tavares</span>!
           </h2>
 
-          <div className="text-gray-700 leading-relaxed space-y-4">
-            <p className='font-semibold text-2xl'>
+          <div className="text-[#2B65A3] leading-relaxed space-y-4">
+            <p className="font-semibold">
               Minha trajetória profissional desde 2019 se baseia na fusão entre
               ilustração e design. Meu portfólio é altamente versátil,
               abrangendo os mercados editorial, de games, branding e
@@ -43,7 +50,7 @@ export default function About() {
         <div className="md:w-2/5 order-2 md:order-1">
           <h2 className="text-4xl font-bold text-pink-500 mb-4">PLACEHOLDER</h2>
 
-          <div className="text-gray-700 leading-relaxed space-y-4">
+          <div className="text-[#2B65A3] leading-relaxed space-y-4">
             <p>BLABLABLA</p>
             <p>oi tenho minhas artes num sei q lá</p>
             <p>sou especialista em blablbala</p>
@@ -62,38 +69,35 @@ export default function About() {
         </div>
       </div> */}
 
-      {/* Terceira seção - Formação e Cursos */}
-      <div className="max-w-8xl mx-auto w-full flex flex-col  border border-black px-10">
-        <h2 className="text-4xl font-bold text-pink-500 mb-8 text-center">
-          FORMAÇÃO
-        </h2>
+      {/* Segujnda seção - Formação e Cursos */}
+      <div className="max-w-8xl mx-auto w-full flex flex-col   px-10">
         {/* Container principal com as duas colunas */}
 
         <div className="flex flex-col md:flex-row gap-16 md:gap-20 ">
           {/* Coluna da Esquerda: Graduações */}
-          <div className="flex flex-col w-full md:w-1/2 border-black">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6">
+          <div className="flex flex-col w-full md:w-1/2 ">
+            <h3 className="text-2xl font-extrabold text-[#12487F] mb-6">
               Graduações{' '}
-              <span className="text-lg font-normal text-gray-600">
+              <span className="text-lg font-normal text-[#4B83C3]">
                 / Education
               </span>
             </h3>
 
             <div className="flex flex-col gap-6">
               <div className="border-l-4 border-pink-500 pl-4">
-                <h4 className="font-bold text-gray-800">UFC 2017-2022</h4>
-                <p className="text-gray-700">Bacharelado em Design</p>
-                <p className="text-gray-600 text-sm italic">
+                <h4 className="font-bold text-[#12487F]">UFC 2017-2022</h4>
+                <p className="text-[#2B65A3]">Bacharelado em Design</p>
+                <p className="text-[#4B83C3] text-sm italic">
                   Masters in Design
                 </p>
               </div>
 
               <div className="border-l-4 border-pink-500 pl-4">
-                <h4 className="font-bold text-gray-800">PUC-RS 2024 - 2025</h4>
-                <p className="text-gray-700">
+                <h4 className="font-bold text-[#12487F]">PUC-RS 2024 - 2025</h4>
+                <p className="text-[#2B65A3]">
                   MBA em Gestão de Projetos em Metodologias Ágeis
                 </p>
-                <p className="text-gray-600 text-sm italic">
+                <p className="text-[#4B83C3] text-sm italic">
                   MBA in Project Management with Agile Methodologies
                 </p>
               </div>
@@ -101,58 +105,58 @@ export default function About() {
           </div>
           {/* Coluna da Direita: Cursos */}
           <div className="flex flex-col w-full md:w-1/2">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6">
+            <h3 className="text-2xl font-bold text-[#12487F] mb-6">
               Cursos{' '}
-              <span className="text-lg font-normal text-gray-600">
+              <span className="text-lg font-normal text-[#4B83C3]">
                 / Courses
               </span>
             </h3>
 
-            <div className="flex flex-col gap-6 border border-black">
+            <div className="flex flex-col gap-6 ">
               <div className="border-l-4 border-pink-300 pl-4">
-                <h4 className="font-bold text-gray-800">2025 - Motion Boost</h4>
-                <p className="text-gray-700">
+                <h4 className="font-bold text-[#12487F]">2025 - Motion Boost</h4>
+                <p className="text-[#2B65A3]">
                   Motion Design com Paulo Ravel Felizardo
                 </p>
-                <p className="text-gray-600 text-sm italic">
+                <p className="text-[#4B83C3] text-sm italic">
                   Introduction to Motion Design
                 </p>
               </div>
 
               <div className="border-l-4 border-pink-300 pl-4">
-                <h4 className="font-bold text-gray-800">
+                <h4 className="font-bold text-[#12487F]">
                   2025 - Centro Vocacional Tecnológico de Fortaleza
                 </h4>
-                <p className="text-gray-700">Modelagem 3D para Jogos</p>
-                <p className="text-gray-600 text-sm italic">
+                <p className="text-[#2B65A3]">Modelagem 3D para Jogos</p>
+                <p className="text-[#4B83C3] text-sm italic">
                   3D Modeling for Games
                 </p>
               </div>
 
               <div className="border-l-4 border-pink-300 pl-4">
-                <h4 className="font-bold text-gray-800">2023 - Arte Revide</h4>
-                <p className="text-gray-700">
+                <h4 className="font-bold text-[#12487F]">2023 - Arte Revide</h4>
+                <p className="text-[#2B65A3]">
                   Pé na Porta, introdução ao mercado de ilustração
                 </p>
-                <p className="text-gray-600 text-sm italic">
+                <p className="text-[#4B83C3] text-sm italic">
                   Pé na Porta: Introduction to the Illustration Market
                 </p>
               </div>
 
               <div className="border-l-4 border-pink-300 pl-4">
-                <h4 className="font-bold text-gray-800">
+                <h4 className="font-bold text-[#12487F]">
                   2023 - Universidade Federal do Ceará
                 </h4>
-                <p className="text-gray-700">Oficina de Quadrinhos</p>
-                <p className="text-gray-600 text-sm italic">
+                <p className="text-[#2B65A3]">Oficina de Quadrinhos</p>
+                <p className="text-[#4B83C3] text-sm italic">
                   One-Year Comics Workshop
                 </p>
               </div>
 
               <div className="border-l-4 border-pink-300 pl-4">
-                <h4 className="font-bold text-gray-800">2022 - EBAC</h4>
-                <p className="text-gray-700">Concept Art</p>
-                <p className="text-gray-600 text-sm italic">
+                <h4 className="font-bold text-[#12487F]">2022 - EBAC</h4>
+                <p className="text-[#2B65A3]">Concept Art</p>
+                <p className="text-[#4B83C3] text-sm italic">
                   Introduction to Concept Art for Games
                 </p>
               </div>
