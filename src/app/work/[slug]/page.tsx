@@ -42,7 +42,7 @@ export default async function ProjectPage({ params: { slug } }: ProjectPageProps
       </header>
 
 
-      <div className="space-y-6 md:space-y-8">
+      <div className="space-y-1 md:space-y-1">
         {project.muralSections.map((section, index) => (
           <div key={index}>
             {section.type === 'full' && (
@@ -51,7 +51,7 @@ export default async function ProjectPage({ params: { slug } }: ProjectPageProps
               </div>
             )}
             {section.type === 'split' && (
-              <div className="flex flex-col md:flex-row gap-6 md:gap-8">
+              <div className="flex flex-col md:flex-row gap-1 md:gap-1">
                 <div className="w-full md:w-1/2 aspect-[3/4] relative overflow-hidden ">
                   <Image src={section.imagesUrl[0]} alt={section.alts[0]} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
                 </div>
@@ -61,9 +61,9 @@ export default async function ProjectPage({ params: { slug } }: ProjectPageProps
               </div>
             )}
             {section.type === 'trio' && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-1">
                 {section.imagesUrl.map((imageUrl, i) => (
-                  <div key={i} className="w-full aspect-square relative overflow-hidden rounded-lg shadow-lg">
+                  <div key={i} className="w-full aspect-square relative overflow-hidden ">
                     <Image src={imageUrl} alt={section.alts[i]} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
                   </div>
                 ))}
