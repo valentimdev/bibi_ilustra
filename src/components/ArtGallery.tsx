@@ -3,7 +3,6 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getAllProjects } from '@/lib/projectData';
 import type { ProjectData } from '@/lib/projectData';
 
 type ArtGalleryProps = {
@@ -20,16 +19,37 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
   return (
     <section className="w-full h-full py-8">
       <div className="max-w-8xl mx-auto  h-full flex flex-col">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 flex-1">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+          <div
+            className="text-center mb-6 cursor-pointer"
+            onClick={() => handleToggleCategory('ilustracao')}
+          >
+            <h2 className="text-2xl font-extrabold text-[#12487F]">
+              ILLUSTRATION
+            </h2>
+          </div>
+          <div
+            className="text-center mb-6 cursor-pointer"
+            onClick={() => handleToggleCategory('design')}
+          >
+            <h2 className="text-2xl font-extrabold text-[#12487F]">DESIGN</h2>
+          </div>
+        </div>
+        <div
+          className={`grid grid-cols-1 ${
+            exibition === '' ? 'lg:grid-cols-2 gap-2' : 'gap-0'
+          } flex-1 transition-all duration-300`}
+        >
           <div>
-            <div
-              className="text-center mb-6 cursor-pointer"
-              onClick={() => handleToggleCategory('ilustracao')}
-            >
-              <h2 className="text-2xl font-extrabold text-[#12487F]">ILLUSTRATION</h2>
-            </div>
+
             {(exibition === 'ilustracao' || exibition === '') && (
-              <div className="grid grid-cols-2 gap-2">
+              <div
+                className={`grid ${
+                  exibition === ''
+                    ? 'grid-cols-2'
+                    : 'grid-cols-2 md:grid-cols-3'
+                } gap-2`}
+              >
                 {projects
                   .filter(
                     (project: ProjectData) => project.category === 'ilustracao'
@@ -64,17 +84,14 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
 
           {/* Coluna DESIGN */}
           <div>
-            <div
-              className="text-center mb-6 cursor-pointer"
-              onClick={(e) => {
-                console.log('evento ->', e);
-                handleToggleCategory('design');
-              }}
-            >
-              <h2 className=" text-2xl font-extrabold text-[#12487F]">DESIGN</h2>
-            </div>
             {(exibition === 'design' || exibition === '') && (
-              <div className="grid grid-cols-2 gap-2">
+              <div
+                className={`grid ${
+                  exibition === ''
+                    ? 'grid-cols-2'
+                    : 'grid-cols-2 md:grid-cols-3'
+                } gap-2`}
+              >
                 {projects
                   .filter(
                     (project: ProjectData) => project.category === 'design'
