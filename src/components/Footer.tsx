@@ -45,7 +45,7 @@ const Footer: React.FC = () => {
         ))}
       </div>
 
-      <p className="text text-[<value>] ">
+      <p className="text text-gray-800 ">
         Bianca Tavares © 
       </p>
     </footer>
