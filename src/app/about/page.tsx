@@ -2,14 +2,14 @@ import React from 'react';
 
 export default function About() {
   return (
-    <div className="flex flex-col w-full h-full py-12  gap-16 border border-black">
+    <div className="flex flex-col w-full h-full py-12  gap-16 ">
       <div className="flex flex-col md:flex-row md:gap-35 md:items-center max-w-8xl px-10">
         <div className="w-full md:w-3/7 mb-8 md:mb-0">
           <div className="bg-black w-full h-full md:h-120 rounded-lg"></div>{' '}
           {/* Placeholder para a imagem */}
         </div>
 
-        <div className="w-full md:w-4/7 border border-black md:px-16">
+        <div className="w-full md:w-4/7  md:px-16">
           <h2 className="text-3xl font-bold text-[#EC2677] mb-4">
             Oi, Sou Bianca Tavares!
           </h2>

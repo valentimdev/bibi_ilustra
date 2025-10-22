@@ -20,16 +20,16 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
   return (
     <section className="w-full h-full py-8">
       <div className="max-w-8xl mx-auto  h-full flex flex-col">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 flex-1">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 flex-1">
           <div>
             <div
               className="text-center mb-6 cursor-pointer"
               onClick={() => handleToggleCategory('ilustracao')}
             >
-              <h2 className="text-2xl font-bold text-black">ILUSTRAÇÃO</h2>
+              <h2 className="text-2xl font-extrabold text-[#12487F]">ILLUSTRATION</h2>
             </div>
             {(exibition === 'ilustracao' || exibition === '') && (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-2">
                 {projects
                   .filter(
                     (project: ProjectData) => project.category === 'ilustracao'
@@ -42,7 +42,7 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
                           alt={project.title}
                           fill
                           sizes="(max-width: 1024px) 50vw, 25vw"
-                          className="transition-transform duration-500 ease-in-out object-cover rounded-md"
+                          className="transition-transform duration-500 ease-in-out object-cover"
                         />
 
                         <div className="absolute inset-0 bg-black bg-opacity-60 flex items-end p-6 opacity-0 group-hover:opacity-60 transition-opacity duration-300">
@@ -71,10 +71,10 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
                 handleToggleCategory('design');
               }}
             >
-              <h2 className="text-2xl font-bold text-black">DESIGN</h2>
+              <h2 className=" text-2xl font-extrabold text-[#12487F]">DESIGN</h2>
             </div>
             {(exibition === 'design' || exibition === '') && (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-2">
                 {projects
                   .filter(
                     (project: ProjectData) => project.category === 'design'
@@ -87,7 +87,7 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
                           alt={project.title}
                           fill
                           sizes="(max-width: 1024px) 50vw, 25vw"
-                          className="transition-transform duration-500 ease-in-out object-cover rounded-md"
+                          className="transition-transform duration-500 ease-in-out object-cover"
                         />
 
                         <div className="absolute inset-0 bg-black bg-opacity-60 flex items-end p-6 opacity-0 group-hover:opacity-60 transition-opacity duration-300">

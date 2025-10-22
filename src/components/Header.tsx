@@ -27,15 +27,15 @@ function Header() {
         {/* Coluna 1: Links de navegação */}
         <div className="hidden md:flex flex-row justify-start items-center gap-3">
           <Link href="/about">
-            <p>ABOUT</p>
+            <p className="font-extrabold">ABOUT</p>
           </Link>
 
           <Link href="/">
-            <p>WORK</p>
+            <p className="font-extrabold">WORK</p>
           </Link>
 
           <Link href="/">
-            <p>CONTACT</p>
+            <p className="font-extrabold">CONTACT</p>
           </Link>
         </div>
 
