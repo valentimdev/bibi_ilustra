@@ -23,7 +23,7 @@ function Header() {
         backgroundRepeat: 'no-repeat',
       }}
     >
-      <nav className="max-w-8xl mx-10 grid grid-cols-3 items-center h-24 px-4 sm:px-6 lg:px-8">
+      <nav className="max-w-8xl mx-10 grid grid-cols-3 items-center h-30 px-4 sm:px-6 lg:px-8">
         {/* Coluna 1: Links de navegação */}
         <div className="hidden md:flex flex-row justify-start items-center gap-3">
           <Link href="/about">
@@ -49,8 +49,8 @@ function Header() {
             <Image
               src={logoSrc}
               alt="Logo"
-              width={300}
-              height={50}
+              width={350}
+              height={70}
               unoptimized={true}
             />
           </Link>
