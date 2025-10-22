@@ -1,11 +1,17 @@
 'use client';
 
+import { clsx } from 'clsx';
 import { useState } from 'react';
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 // import Katty from '@/public/bianca_katty_logo.svg'
 function Header() {
+  const svgBehanceOff = '/icons/behance_hover.svg';
+  const svgBehanceOn = '/icons/behance.svg';
+
+  const [isHovered, setIsHovered] = useState(false);
+
   const [logoSrc, setLogoSrc] = useState('/logos/bianca_katty_logo.svg');
   const handleMouseEnter = () => {
     setLogoSrc('/logos/bianca_katty_logo_gif.gif');
@@ -27,15 +33,21 @@ function Header() {
         {/* Coluna 1: Links de navegação */}
         <div className="hidden md:flex flex-row justify-start items-center gap-3">
           <Link href="/about">
-            <p className="font-extrabold hover:text-[var(--accent)]">ABOUT</p>
+            <p className="font-extrabold hover:text-[var(--accent)] transition-all duration-400 ease-in-out">
+              ABOUT
+            </p>
           </Link>
 
           <Link href="/">
-            <p className="font-extrabold hover:text-[var(--accent)]">WORK</p>
+            <p className="font-extrabold hover:text-[var(--accent)] transition-all duration-400 ease-in-out">
+              WORK
+            </p>
           </Link>
 
           <Link href="/">
-            <p className="font-extrabold hover:text-[var(--accent)]">CONTACT</p>
+            <p className="font-extrabold hover:text-[var(--accent)] transition-all duration-400 ease-in-out">
+              CONTACT
+            </p>
           </Link>
         </div>
 
@@ -64,13 +76,20 @@ function Header() {
                 href="https://www.behance.net/biannca_mo7ac9"
                 target="_blank"
                 rel="noopener noreferrer"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
               >
                 <Image
-                  src="/icons/behance.svg"
+                  src={!isHovered ? svgBehanceOn : svgBehanceOff}
                   alt="Behance"
                   width={40}
                   height={50}
-                  className="cursor-pointer"
+                  className={clsx(
+                    'cursor-pointer transition-transform duration-400 ease-out',
+                    {
+                      '-translate-y-1': isHovered,
+                    }
+                  )}
                 />
               </a>
             </li>

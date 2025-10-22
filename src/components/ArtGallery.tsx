@@ -20,19 +20,31 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
     <section className="w-full h-full py-8">
       <div className="max-w-8xl mx-auto  h-full flex flex-col ">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-          <div
-            className="text-center mb-6 cursor-pointer"
+                    <div className="text-center mb-6 cursor-pointer w-fit mx-auto">
+            <h2
             onClick={() => handleToggleCategory('ilustracao')}
-          >
-            <h2 className="text-2xl font-extrabold text-[#12487F]">
+              className={`  text-2xl font-extrabold select-none hover:text-[var(--primary)] transition-all duration-400 ease-in-out ${
+                exibition === 'ilustracao'
+                  ? 'text-[var(--primary)]'
+                  : 'text-[#12487F]'
+              }`}
+            >
+              {' '}
               ILLUSTRATION
             </h2>
           </div>
-          <div
-            className="text-center mb-6 cursor-pointer"
+          <div className="text-center mb-6 cursor-pointer w-fit mx-auto">
+            <h2
             onClick={() => handleToggleCategory('design')}
-          >
-            <h2 className="text-2xl font-extrabold text-[#12487F]">DESIGN</h2>
+              className={`  text-2xl font-extrabold select-none hover:text-[var(--primary)] transition-all duration-400 ease-in-out ${
+                exibition === 'design'
+                  ? 'text-[var(--primary)]'
+                  : 'text-[#12487F]'
+              }`}
+            >
+              {' '}
+              DESIGN
+            </h2>
           </div>
         </div>
         <div
@@ -41,7 +53,6 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
           } flex-1 transition-all duration-300`}
         >
           <div>
-
             {(exibition === 'ilustracao' || exibition === '') && (
               <div
                 className={`grid ${
