@@ -9,8 +9,9 @@ import path from 'path';
 type MuralSectionFull = { type: 'full'; imageUrl: string; alt: string; };
 type MuralSectionSplit = { type: 'split'; imagesUrl: [string, string]; alts: [string, string]; };
 type MuralSectionTrio = { type: 'trio'; imagesUrl: [string, string, string]; alts: [string, string, string]; };
+type MuralSectionText = { type: 'text'; content: string; };
 
-export type MuralSection = MuralSectionFull | MuralSectionSplit | MuralSectionTrio;
+export type MuralSection = MuralSectionFull | MuralSectionSplit | MuralSectionTrio | MuralSectionText;
 
 export type ProjectData = {
   id: string;

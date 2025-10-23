@@ -1,7 +1,7 @@
 {
   "id": "2",
   "slug": "a",
-  "title": "Complexo Cultural Estação das Artes",
+  "title": "ponei",
   "description": "Uma série de ilustrações em formato de zine celebrando a arquitetura e a cultura do Complexo Cultural Estação das Artes em Fortaleza, Ceará.",
   "date": "Outubro de 2025",
   "category": "design",
@@ -14,6 +14,10 @@
       "alt": "Descrição da imagem de largura total."
     },
     {
+      "type": "text",
+      "content": "My creative process began with a photograph I captured in the city of São Paulo. What drew my attention was its ethereal quality, the duality between revealing and concealing, presence and absence. This atmosphere strongly resonated with the tensions and contrasts found in Wuthering Heights, and it became the starting point for developing the book cover design.After finishing the classic Wuthering Heights, I developed a book cover design that combines analog and digital media, exploring the contrast between the contemporary and the timeless. The idea was to reinterpret the intensity and dark atmosphere of the novel through a modern visual lens, creating a dialogue between literary tradition and new aesthetic possibilities."
+    },
+    {
       "type": "split",
       "imagesUrl": ["/placeholder.jpg", "/placeholder.jpg"],
       "alts": ["Descrição da imagem esquerda.", "Descrição da imagem direita."]
@@ -21,7 +25,15 @@
     {
       "type": "trio",
       "imagesUrl": ["/placeholder.jpg", "/placeholder.jpg", "/placeholder.jpg"],
-      "alts": ["Descrição da imagem 1 do trio.", "Descrição da imagem 2 do trio.", "Descrição da imagem 3 do trio."]
+      "alts": [
+        "Descrição da imagem 1 do trio.",
+        "Descrição da imagem 2 do trio.",
+        "Descrição da imagem 3 do trio."
+      ]
+    },
+    {
+      "type": "text",
+      "content": "My creative process began with a photograph I captured in the city of São Paulo. What drew my attention was its ethereal quality, the duality between revealing and concealing, presence and absence. This atmosphere strongly resonated with the tensions and contrasts found in Wuthering Heights, and it became the starting point for developing the book cover design.After finishing the classic Wuthering Heights, I developed a book cover design that combines analog and digital media, exploring the contrast between the contemporary and the timeless. The idea was to reinterpret the intensity and dark atmosphere of the novel through a modern visual lens, creating a dialogue between literary tradition and new aesthetic possibilities."
     }
   ]
 }
