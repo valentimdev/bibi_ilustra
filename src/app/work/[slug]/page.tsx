@@ -53,7 +53,7 @@ export default async function ProjectPage({
                   alt={section.alt}
                   fill
                   sizes="100vw"
-                  className="object-cover"
+                  className="object-cover cursor-zoom-in"
                 />
               </div>
             )}

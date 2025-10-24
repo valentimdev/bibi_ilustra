@@ -3,78 +3,53 @@ import React from 'react';
 
 export default function About() {
   return (
-    <div className="flex flex-col w-full h-full py-12  gap-16 ">
-      <div className="flex flex-col md:flex-row md:gap-16 md:items-center max-w-8xl px-10">
-        <div className="w-full md:w-2/5 relative mb-8 md:mb-0">
-
-          <div className="aspect-[5/5] rounded-lg overflow-hidden">
-            <Image
-              src="/images/bibi_foto.jpg" 
-              alt="Foto de Bianca Tavares"
-              fill
-              className="object-cover" 
-            />
-          </div>
+    <div className="flex flex-col w-full min-h-screen py-12 gap-16">
+      <div className="flex flex-row gap-8 px-8 py-8 max-w-7xl mx-auto w-full border border-black">
+      <div className="relative w-[48%] flex-shrink-0 min-h-[600px] border">
+          <Image
+            src="/images/bibi_foto.jpg"
+            alt="Foto de Bianca Tavares"
+            fill
+            className="object-contain"
+          />
         </div>
-        <div className="w-full md:w-3/5  md:px-16">
-          <h2 className="text-3xl font-bold text-[#12487F] mb-4">
-            Oi, Sou <span className='text-[var(--primary)]'>Bianca Tavares</span>!
+        
+
+        <div className="flex-1 flex flex-col justify-center">
+          <h2 className="text-4xl font-bold text-gray-900 mb-6 leading-tight">
+            Hi, I'm{' '}
+            <span className="text-[var(--primary)]">Bianca Tavares</span>!
           </h2>
 
-          <div className="text-[#2B65A3] leading-relaxed space-y-4">
-            <p className="font-semibold">
-              Minha trajetória profissional desde 2019 se baseia na fusão entre
-              ilustração e design. Meu portfólio é altamente versátil,
-              abrangendo os mercados editorial, de games, branding e
-              audiovisual.
-            </p>
-            <p>
-              No campo educacional, desenvolvi ilustrações didáticas para o
-              público infantil até o científico universitário, além de criar
-              capas e projetos gráficos para esse segmento. Minha experiência
-              inclui o desenvolvimento de personagens e concept arts para jogos
-              digitais, bem como a criação de gráficos e peças visuais para
-              branding e edição de vídeo.
-            </p>
-            <p>
-              Minha paixão é traduzir ideias complexas em projetos visuais
-              envolventes e estrategicamente sólidos, sempre preservando a
-              autenticidade e o brilho próprio de cada criação.
-            </p>
-            <p className="text-[#EC2677] text-2xl font-bold">Vamos criar?</p>
-          </div>
+          <p className="font-semibold text-lg leading-relaxed mb-6 text-gray-800">
+            Blending{' '}
+            <span className="text-[var(--secondary)]">illustration</span> and{' '}
+            <span className="text-[var(--secondary)]">design</span> in the
+            professional market since 2019. My work is versatile, moving across
+            editorial, gaming, branding, and audiovisual content.
+          </p>
+
+          <p className="text-gray-700 leading-relaxed mb-6">
+            I've delivered didactic illustrations, from children's materials to
+            complex scientific university content, alongside developing the
+            covers and graphic projects for those segments. My expertise also
+            includes creating characters and concept art for digital games, as
+            well as designing graphics and visuals for branding and video
+            editing.
+          </p>
+
+          <p className="text-gray-700 leading-relaxed mb-8">
+            My passion is translating complex ideas into engaging and
+            strategically sound visual projects, always preserving the unique
+            authenticity and spark of each creation.
+          </p>
+
+          <p className="text-[#EC2677] text-2xl font-bold">Let's create?</p>
         </div>
       </div>
-      {/* 
-      <div className="flex flex-col md:flex-row md:gap-12 max-w-7xl mx-auto">
-        <div className="md:w-2/5 order-2 md:order-1">
-          <h2 className="text-4xl font-bold text-pink-500 mb-4">PLACEHOLDER</h2>
 
-          <div className="text-[#2B65A3] leading-relaxed space-y-4">
-            <p>BLABLABLA</p>
-            <p>oi tenho minhas artes num sei q lá</p>
-            <p>sou especialista em blablbala</p>
-            <p>
-              Minha paixão é traduzir ideias complexas em projetos visuais
-              envolventes e estrategicamente sólidos, sempre preservando a
-              autenticidade e o brilho próprio de cada criação.
-            </p>
-            <p className="text-pink-500 font-bold">Vamos criar?</p>
-          </div>
-        </div>
-
-        <div className="md:w-3/5 mb-8 md:mb-0 order-1 md:order-2 flex flex-col gap-5">
-          <div className="bg-gray-700 w-full h-50 md:h-50%"></div>{' '}
-          <div className="bg-gray-700 w-full h-50 md:h-50%"></div>{' '}
-        </div>
-      </div> */}
-
-      {/* Segujnda seção - Formação e Cursos */}
-      <div className="max-w-8xl mx-auto w-full flex flex-col   px-10">
-        {/* Container principal com as duas colunas */}
-
+      <div className="max-w-7xl mx-auto w-full flex flex-col   px-10 border border-black">
         <div className="flex flex-col md:flex-row gap-16 md:gap-20 ">
-          {/* Coluna da Esquerda: Graduações */}
           <div className="flex flex-col w-full md:w-1/2 ">
             <h3 className="text-2xl font-extrabold text-[#12487F] mb-6">
               Graduações{' '}
@@ -85,25 +60,25 @@ export default function About() {
 
             <div className="flex flex-col gap-6">
               <div className="border-l-4 border-pink-500 pl-4">
-                <h4 className="font-bold text-[#12487F]">UFC 2017-2022</h4>
-                <p className="text-[#2B65A3]">Bacharelado em Design</p>
-                <p className="text-[#4B83C3] text-sm italic">
+                <h4 className="font-bold text-gray-800">UFC 2017-2022</h4>
+                <p className="text-gray-600">Bacharelado em Design</p>
+                <p className="text-gray-500 text-sm italic">
                   Masters in Design
                 </p>
               </div>
 
               <div className="border-l-4 border-pink-500 pl-4">
-                <h4 className="font-bold text-[#12487F]">PUC-RS 2024 - 2025</h4>
-                <p className="text-[#2B65A3]">
+                <h4 className="font-bold text-gray-800">PUC-RS 2024 - 2025</h4>
+                <p className="text-gray-600">
                   MBA em Gestão de Projetos em Metodologias Ágeis
                 </p>
-                <p className="text-[#4B83C3] text-sm italic">
+                <p className="text-gray-500 text-sm italic">
                   MBA in Project Management with Agile Methodologies
                 </p>
               </div>
             </div>
           </div>
-          {/* Coluna da Direita: Cursos */}
+
           <div className="flex flex-col w-full md:w-1/2">
             <h3 className="text-2xl font-bold text-[#12487F] mb-6">
               Cursos{' '}
@@ -114,49 +89,49 @@ export default function About() {
 
             <div className="flex flex-col gap-6 ">
               <div className="border-l-4 border-pink-300 pl-4">
-                <h4 className="font-bold text-[#12487F]">2025 - Motion Boost</h4>
-                <p className="text-[#2B65A3]">
+                <h4 className="font-bold text-gray-800">2025 - Motion Boost</h4>
+                <p className="text-gray-600">
                   Motion Design com Paulo Ravel Felizardo
                 </p>
-                <p className="text-[#4B83C3] text-sm italic">
+                <p className="text-gray-500 text-sm italic">
                   Introduction to Motion Design
                 </p>
               </div>
 
               <div className="border-l-4 border-pink-300 pl-4">
-                <h4 className="font-bold text-[#12487F]">
+                <h4 className="font-bold text-gray-800">
                   2025 - Centro Vocacional Tecnológico de Fortaleza
                 </h4>
-                <p className="text-[#2B65A3]">Modelagem 3D para Jogos</p>
-                <p className="text-[#4B83C3] text-sm italic">
+                <p className="text-gray-600">Modelagem 3D para Jogos</p>
+                <p className="text-gray-500 text-sm italic">
                   3D Modeling for Games
                 </p>
               </div>
 
               <div className="border-l-4 border-pink-300 pl-4">
-                <h4 className="font-bold text-[#12487F]">2023 - Arte Revide</h4>
-                <p className="text-[#2B65A3]">
+                <h4 className="font-bold text-gray-800">2023 - Arte Revide</h4>
+                <p className="text-gray-600">
                   Pé na Porta, introdução ao mercado de ilustração
                 </p>
-                <p className="text-[#4B83C3] text-sm italic">
+                <p className="text-gray-500 text-sm italic">
                   Pé na Porta: Introduction to the Illustration Market
                 </p>
               </div>
 
               <div className="border-l-4 border-pink-300 pl-4">
-                <h4 className="font-bold text-[#12487F]">
+                <h4 className="font-bold text-gray-800">
                   2023 - Universidade Federal do Ceará
                 </h4>
-                <p className="text-[#2B65A3]">Oficina de Quadrinhos</p>
-                <p className="text-[#4B83C3] text-sm italic">
+                <p className="text-gray-600">Oficina de Quadrinhos</p>
+                <p className="text-gray-500 text-sm italic">
                   One-Year Comics Workshop
                 </p>
               </div>
 
               <div className="border-l-4 border-pink-300 pl-4">
-                <h4 className="font-bold text-[#12487F]">2022 - EBAC</h4>
-                <p className="text-[#2B65A3]">Concept Art</p>
-                <p className="text-[#4B83C3] text-sm italic">
+                <h4 className="font-bold text-gray-800">2022 - EBAC</h4>
+                <p className="text-gray-600">Concept Art</p>
+                <p className="text-gray-500 text-sm italic">
                   Introduction to Concept Art for Games
                 </p>
               </div>
