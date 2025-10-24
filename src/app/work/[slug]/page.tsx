@@ -23,7 +23,7 @@ export default async function ProjectPage({
   }
 
   return (
-    <section className="w-full py-6">
+    <section className="w-full pt-20 pb-10">
       {isEnabled && (
         <div className="bg-pink-600 text-white text-center p-2 mb-8">
           Você está em **Modo de Preview**.{' '}
@@ -33,14 +33,15 @@ export default async function ProjectPage({
         </div>
       )}
 
-      <header className="text-center mb-12">
+      <header className="text-center mb-12  px-4 py-6 mx-auto">
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900">
           {project.title}
         </h1>
-        <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+        <p className="mt-4 text-lg text-gray-500">{project.date}</p>
+        <p className="mt-4 text-xl text-left text-gray-800 mx-auto">
           {project.description}
         </p>
-        <p className="mt-2 text-sm text-gray-400">{project.date}</p>
+
       </header>
 
       <div className="space-y-1 md:space-y-1">
@@ -99,7 +100,7 @@ export default async function ProjectPage({
             )}
             {section.type === 'text' && (
               <div className=" px-3 py-8 md:py-8  ">
-                <p className="text-gray-800 leading-relaxed whitespace-pre-wrap text-xl">
+                <p className="text-gray-800 text-xl leading-relaxed whitespace-pre-wrap ">
                   {section.content}
                 </p>
               </div>

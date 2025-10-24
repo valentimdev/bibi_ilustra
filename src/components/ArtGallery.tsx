@@ -17,7 +17,7 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
   };
 
   return (
-    <section className="w-full h-full py-8">
+    <section className="w-full h-full py-10">
       <div className="max-w-8xl mx-auto  h-full flex flex-col ">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     <div className="text-center mb-6 cursor-pointer w-fit mx-auto">
