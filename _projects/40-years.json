@@ -1,0 +1,42 @@
+{
+    "id": "13",
+    "slug": "40-years",
+    "title": "40 Years",
+    "description": "The initiative, named Enxame (Swarm), is a project by Northeastern Brazilian comic artists, launched to celebrate the 40th anniversary of the UFC (Federal University of Ceará) Comics Workshop. For its first edition, the artists were asked to envision our society in 40 years, specifically in 2065, on a single page. The project that follows is my proposed page for this collection.",
+    "date": "Novembro de 2025",
+    "category": "design",
+    "coverImage": "/40-years/thumb_real.jpeg",
+    "published": true,
+    "muralSections": [
+      {
+        "type": "full",
+        "imageUrl": "/40-years/1.png",
+        "alt": "Descrição da imagem de largura total."
+      },
+      {
+        "type": "full",
+        "imageUrl": "/40-years/2.png",
+        "alt": "Descrição da imagem de largura total."
+      },
+      {
+        "type": "full",
+        "imageUrl": "/40-years/3.png",
+        "alt": "Descrição da imagem de largura total."
+      },
+      {
+        "type": "full",
+        "imageUrl": "/40-years/4.png",
+        "alt": "Descrição da imagem de largura total."
+      },
+      {
+        "type": "full",
+        "imageUrl": "/40-years/5.png",
+        "alt": "Descrição da imagem de largura total."
+      },
+      {
+        "type": "full",
+        "imageUrl": "/40-years/6.png",
+        "alt": "Descrição da imagem de largura total."
+      }
+    ]
+  }

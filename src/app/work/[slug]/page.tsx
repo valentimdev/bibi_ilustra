@@ -59,9 +59,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   <video
                     src={section.imageUrl}
                     className="w-full h-full object-cover cursor-zoom-in"
-                    controls
                     loop
                     playsInline
+                    autoPlay
+                    muted
                   />
                 ) : (
                   <Image

@@ -5,12 +5,12 @@
     "description": "The project involves graphic experimentation in video, testing the boundaries of abstraction in moving images through textures and blending, while always maintaining visual clarity.\nFrame by frame, each video clip was edited and blended to explore the full graphic potential of the original footage. The contrast between light and shadow is elevated in every frame, accentuated by the shocking pink coloring overlaid upon the absence of color.",
     "date": "Novembro de 2025",
     "category": "design",
-    "coverImage": "/animation-test/1.gif",
+    "coverImage": "/animation-test/output.webp",
     "published": true,
     "muralSections": [
       {
         "type": "full",
-        "imageUrl": "/animation-test/1.gif",
+        "imageUrl": "/animation-test/output.webp",
         "alt": "Descrição da imagem de largura total."
       },
       {
