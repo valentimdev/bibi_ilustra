@@ -94,17 +94,17 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
             className={`px-8 py-3 text-xl font-extrabold uppercase select-none transition-all duration-300 ease-in-out ${
               exibition === 'design'
               ? 'font-extrabold bg-[var(--secondary)] text-white rounded-full scale-105 shadow-xl transition-all duration-300' 
-              : 'bg-transparent font-extrabold text-[var(--secondary)] '
+              : 'bg-transparent font-extrabold text-white cursor-pointer'
             }`}
           >
             DESIGN
           </button>
           <button
             onClick={() => handleToggleCategory('ilustracao')}
-            className={`px-8 py-4 text-xl font-extrabold uppercase select-none transition-all duration-300 ease-in-out ${
+            className={`px-8 py-3 text-xl font-extrabold uppercase select-none transition-all duration-300 ease-in-out ${
               exibition === 'ilustracao'
               ? 'bg-[var(--secondary)] text-white rounded-full scale-105 shadow-xl transition-all duration-300' 
-              : 'bg-transparent text-[var(--secondary)] font-extrabold'
+              : 'bg-transparent text-white font-extrabold cursor-pointer'
             }`}
           >
             ILLUSTRATION
