@@ -1,0 +1,42 @@
+{
+    "id": "13",
+    "slug": "animação-experimental",
+    "title": "Animação Experimental",
+    "description": "Uma série de ilustrações em formato de zine celebrando a arquitetura e a cultura do Complexo Cultural Estação das Artes em Fortaleza, Ceará.",
+    "date": "Outubro de 2025",
+    "category": "design",
+    "coverImage": "/animation-test/1.gif",
+    "published": true,
+    "muralSections": [
+      {
+        "type": "full",
+        "imageUrl": "/animation-test/1.gif",
+        "alt": "Descrição da imagem de largura total."
+      },
+      {
+        "type": "full",
+        "imageUrl": "/animation-test/2.png",
+        "alt": "Descrição da imagem de largura total."
+      },
+      {
+        "type": "full",
+        "imageUrl": "/animation-test/3.gif",
+        "alt": "Descrição da imagem de largura total."
+      },
+      {
+        "type": "full",
+        "imageUrl": "/animation-test/4.png",
+        "alt": "Descrição da imagem de largura total."
+      },
+      {
+        "type": "full",
+        "imageUrl": "/animation-test/5.png",
+        "alt": "Descrição da imagem de largura total."
+      },
+      {
+        "type": "full",
+        "imageUrl": "/animation-test/6.mp4",
+        "alt": "Descrição da imagem de largura total."
+      }
+    ]
+  }
