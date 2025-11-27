@@ -48,7 +48,7 @@ export default function About() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto w-full flex flex-col   px-10 border border-black">
+      <div className="max-w-7xl mx-auto w-full flex flex-col   px-10 border border-black mb-10">
         <div className="flex flex-col md:flex-row gap-16 md:gap-20 ">
           <div className="flex flex-col w-full md:w-1/2 ">
             <h3 className="text-2xl font-extrabold text-[#12487F] mb-6">

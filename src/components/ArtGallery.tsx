@@ -87,11 +87,11 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
       </div>
 
       {/* Botão fixo na parte inferior */}
-      <div className="fixed bottom-0 left-0 right-0 flex justify-center pb-4 z-50">
+      <div className="sticky bottom-0 left-0 right-0 flex justify-center pb-4 z-50 pt-10">
         <div className="relative inline-flex rounded-full border-2 border-[var(--primary)] overflow-hidden bg-[var(--primary)]">
           <button
             onClick={() => handleToggleCategory('design')}
-            className={`px-8 py-3 text-xl font-extrabold uppercase select-none transition-all duration-300 ease-in-out ${
+            className={`px-6 py-2 text-xl font-extrabold uppercase select-none transition-all duration-300 ease-in-out ${
               exibition === 'design'
               ? 'font-extrabold bg-[var(--secondary)] text-white rounded-full scale-105 shadow-xl transition-all duration-300' 
               : 'bg-transparent font-extrabold text-white cursor-pointer'
@@ -101,7 +101,7 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
           </button>
           <button
             onClick={() => handleToggleCategory('ilustracao')}
-            className={`px-8 py-3 text-xl font-extrabold uppercase select-none transition-all duration-300 ease-in-out ${
+            className={`px-6 py-2 text-xl font-extrabold uppercase select-none transition-all duration-300 ease-in-out ${
               exibition === 'ilustracao'
               ? 'bg-[var(--secondary)] text-white rounded-full scale-105 shadow-xl transition-all duration-300' 
               : 'bg-transparent text-white font-extrabold cursor-pointer'
