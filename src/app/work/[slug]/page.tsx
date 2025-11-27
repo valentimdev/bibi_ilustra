@@ -6,21 +6,28 @@ import { draftMode } from 'next/headers';
 import { getProjectBySlug } from '@/lib/projectData';
 
 type ProjectPageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
-export default async function ProjectPage({
-  params: { slug },
-}: ProjectPageProps) {
+export default async function ProjectPage({ params }: ProjectPageProps) {
   const { isEnabled } = await draftMode();
+  const { slug } = await params;
 
   const project = getProjectBySlug(slug);
 
   if (!project || (!project.published && !isEnabled)) {
     notFound();
   }
+
+  const isVideo = (url: string) => {
+    return (
+      url.toLowerCase().endsWith('.mp4') ||
+      url.toLowerCase().endsWith('.webm') ||
+      url.toLowerCase().endsWith('.mov')
+    );
+  };
 
   return (
     <section className="w-full pt-20 pb-10">
@@ -38,24 +45,33 @@ export default async function ProjectPage({
           {project.title}
         </h1>
         <p className="mt-4 text-lg text-gray-500">{project.date}</p>
-        <p className="mt-4 text-xl text-left text-gray-800 mx-auto">
+        <p className="mt-4 text-xl text-left text-gray-800 mx-auto whitespace-pre-wrap">
           {project.description}
         </p>
-
       </header>
 
-      <div className="space-y-1 md:space-y-1">
+      <div className="space-y-1 md:space-y-1 mb-10">
         {project.muralSections.map((section, index) => (
           <div key={index}>
             {section.type === 'full' && (
               <div className="w-full aspect-[3/2] md:aspect-[4/2] relative overflow-hidden  ">
-                <Image
-                  src={section.imageUrl}
-                  alt={section.alt}
-                  fill
-                  sizes="100vw"
-                  className="object-cover cursor-zoom-in"
-                />
+                {isVideo(section.imageUrl) ? (
+                  <video
+                    src={section.imageUrl}
+                    className="w-full h-full object-cover cursor-zoom-in"
+                    controls
+                    loop
+                    playsInline
+                  />
+                ) : (
+                  <Image
+                    src={section.imageUrl}
+                    alt={section.alt}
+                    fill
+                    sizes="100vw"
+                    className="object-cover cursor-zoom-in"
+                  />
+                )}
               </div>
             )}
             {section.type === 'split' && (
