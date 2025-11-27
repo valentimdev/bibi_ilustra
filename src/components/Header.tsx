@@ -1,6 +1,5 @@
 'use client';
 
-import { clsx } from 'clsx';
 import { useState } from 'react';
 import React from 'react';
 import Image from 'next/image';
@@ -9,8 +8,14 @@ import Link from 'next/link';
 function Header() {
   const svgBehanceOff = '/icons/behance_hover.svg';
   const svgBehanceOn = '/icons/behance.svg';
+  const svgIgOff = '/icons/ig_hover.svg';
+  const svgIgOn = '/icons/ig.svg';
+  const svgLinkedInOff = '/icons/linkedin_hover.svg';
+  const svgLinkedInOn = '/icons/linkedin.svg';
 
-  const [isHovered, setIsHovered] = useState(false);
+  const [isBehanceHovered, setIsBehanceHovered] = useState(false);
+  const [isIgHovered, setIsIgHovered] = useState(false);
+  const [isLinkedInHovered, setIsLinkedInHovered] = useState(false);
 
   const [logoSrc, setLogoSrc] = useState('/logos/bianca_katty_logo.svg');
   const handleMouseEnter = () => {
@@ -76,20 +81,15 @@ function Header() {
                 href="https://www.behance.net/biannca_mo7ac9"
                 target="_blank"
                 rel="noopener noreferrer"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
+                onMouseEnter={() => setIsBehanceHovered(true)}
+                onMouseLeave={() => setIsBehanceHovered(false)}
               >
                 <Image
-                  src={!isHovered ? svgBehanceOn : svgBehanceOff}
+                  src={!isBehanceHovered ? svgBehanceOn : svgBehanceOff}
                   alt="Behance"
                   width={40}
                   height={50}
-                  className={clsx(
-                    'cursor-pointer transition-transform duration-400 ease-out',
-                    {
-                      '-translate-y-1': isHovered,
-                    }
-                  )}
+                  className="cursor-pointer transition-all duration-400 ease-in-out"
                 />
               </a>
             </li>
@@ -98,13 +98,15 @@ function Header() {
                 href="https://www.instagram.com/arttbit?igsh=aTJzN2J2YmJqc3V0&utm_source=qr"
                 target="_blank"
                 rel="noopener noreferrer"
+                onMouseEnter={() => setIsIgHovered(true)}
+                onMouseLeave={() => setIsIgHovered(false)}
               >
                 <Image
-                  src="/icons/ig.svg"
+                  src={!isIgHovered ? svgIgOn : svgIgOff}
                   alt="Instagram"
                   width={40}
                   height={50}
-                  className="cursor-pointer"
+                  className="cursor-pointer transition-all duration-400 ease-in-out"
                 />
               </a>
             </li>
@@ -113,13 +115,15 @@ function Header() {
                 href="https://www.linkedin.com/in/bianca-tavares-388876221?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
                 target="_blank"
                 rel="noopener noreferrer"
+                onMouseEnter={() => setIsLinkedInHovered(true)}
+                onMouseLeave={() => setIsLinkedInHovered(false)}
               >
                 <Image
-                  src="/icons/linkedin.svg"
+                  src={!isLinkedInHovered ? svgLinkedInOn : svgLinkedInOff}
                   alt="LinkedIn"
                   width={40}
                   height={50}
-                  className="cursor-pointer"
+                  className="cursor-pointer transition-all duration-400 ease-in-out"
                 />
               </a>
             </li>
