@@ -3,8 +3,7 @@
 import fs from 'fs';
 import path from 'path';
 
-// --- DEFINIÇÃO DOS TIPOS (O "CONTRATO") ---
-// Estes tipos garantem que todos os nossos dados tenham o mesmo formato.
+
 
 type MuralSectionFull = { type: 'full'; imageUrl: string; alt: string; };
 type MuralSectionSplit = { type: 'split'; imagesUrl: [string, string]; alts: [string, string]; };
