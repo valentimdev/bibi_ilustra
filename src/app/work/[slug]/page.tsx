@@ -54,25 +54,29 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         {project.muralSections.map((section, index) => (
           <div key={index}>
             {section.type === 'full' && (
-              <div className="w-full aspect-[3/2] md:aspect-[4/2] relative overflow-hidden  ">
-                {isVideo(section.imageUrl) ? (
-                  <video
-                    src={section.imageUrl}
-                    className="w-full h-full object-cover cursor-zoom-in"
-                    loop
-                    playsInline
-                    autoPlay
-                    muted
-                  />
-                ) : (
-                  <Image
-                    src={section.imageUrl}
-                    alt={section.alt}
-                    fill
-                    sizes="100vw"
-                    className="object-cover cursor-zoom-in"
-                  />
-                )}
+              <div className="w-full flex justify-center">
+                <div className="w-full max-w-[1400px] relative">
+                  {isVideo(section.imageUrl) ? (
+                    <video
+                      src={section.imageUrl}
+                      className="w-full h-auto cursor-zoom-in"
+                      loop
+                      playsInline
+                      autoPlay
+                      muted
+                    />
+                  ) : (
+                    <Image
+                      src={section.imageUrl}
+                      alt={section.alt}
+                      width={1400}
+                      height={0}
+                      sizes="(max-width: 1400px) 100vw, 1400px"
+                      className="w-full h-auto cursor-zoom-in"
+                      style={{ height: 'auto' }}
+                    />
+                  )}
+                </div>
               </div>
             )}
             {section.type === 'split' && (
