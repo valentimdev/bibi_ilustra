@@ -3,14 +3,24 @@
 import fs from 'fs';
 import path from 'path';
 
+type MuralSectionFull = { type: 'full'; imageUrl: string; alt: string };
+type MuralSectionSplit = {
+  type: 'split';
+  imagesUrl: [string, string];
+  alts: [string, string];
+};
+type MuralSectionTrio = {
+  type: 'trio';
+  imagesUrl: [string, string, string];
+  alts: [string, string, string];
+};
+type MuralSectionText = { type: 'text'; content: string };
 
-
-type MuralSectionFull = { type: 'full'; imageUrl: string; alt: string; };
-type MuralSectionSplit = { type: 'split'; imagesUrl: [string, string]; alts: [string, string]; };
-type MuralSectionTrio = { type: 'trio'; imagesUrl: [string, string, string]; alts: [string, string, string]; };
-type MuralSectionText = { type: 'text'; content: string; };
-
-export type MuralSection = MuralSectionFull | MuralSectionSplit | MuralSectionTrio | MuralSectionText;
+export type MuralSection =
+  | MuralSectionFull
+  | MuralSectionSplit
+  | MuralSectionTrio
+  | MuralSectionText;
 
 export type ProjectData = {
   id: string;
@@ -43,7 +53,34 @@ export function getAllProjects(): ProjectData[] {
   const filenames = fs.readdirSync(projectsDirectory);
 
   return filenames
-    .map(filename => getProjectBySlug(filename.replace(/\.json$/, '')))
+    .map((filename) => getProjectBySlug(filename.replace(/\.json$/, '')))
     .filter((project): project is ProjectData => project !== undefined)
-    .filter(project => project.published);
+    .filter((project) => project.published);
+}
+
+export function getAllProjectsIncludingDrafts(): ProjectData[] {
+  const filenames = fs.readdirSync(projectsDirectory);
+
+  return filenames
+    .map((filename) => getProjectBySlug(filename.replace(/\.json$/, '')))
+    .filter((project): project is ProjectData => project !== undefined);
+}
+
+export function saveProject(project: ProjectData): void {
+  const fullPath = path.join(projectsDirectory, `${project.slug}.json`);
+  fs.writeFileSync(fullPath, JSON.stringify(project, null, 2), 'utf8');
+}
+
+export function deleteProject(slug: string): boolean {
+  try {
+    const fullPath = path.join(projectsDirectory, `${slug}.json`);
+    if (fs.existsSync(fullPath)) {
+      fs.unlinkSync(fullPath);
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('Erro ao deletar projeto:', error);
+    return false;
+  }
 }
