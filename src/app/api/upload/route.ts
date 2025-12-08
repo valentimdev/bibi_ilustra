@@ -1,7 +1,14 @@
 import { put } from '@vercel/blob';
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
+  try {
+    await requireAuth();
+  } catch (error) {
+    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  }
+
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
@@ -22,7 +29,7 @@ export async function POST(request: NextRequest) {
       'image/gif',
       'video/mp4',
     ];
-    
+
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
         { error: 'Tipo de arquivo não permitido.' },
@@ -30,7 +37,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const maxSize = 50 * 1024 * 1024; 
+    const maxSize = 50 * 1024 * 1024;
     if (file.size > maxSize) {
       return NextResponse.json(
         { error: 'Arquivo muito grande.' },
@@ -53,10 +60,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       url: blob.url,
       pathname: blob.pathname,
-      size: file.size, 
+      size: file.size,
       uploadedAt: new Date().toISOString(),
     });
-
   } catch (error) {
     console.error('Erro ao fazer upload:', error);
     return NextResponse.json(

@@ -1,7 +1,15 @@
 import { del } from '@vercel/blob';
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth';
 
 export async function DELETE(request: NextRequest) {
+  try {
+
+    await requireAuth();
+  } catch (error) {
+    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const url = searchParams.get('url');
