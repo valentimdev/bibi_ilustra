@@ -10,16 +10,26 @@ interface ProjectFormProps {
   loading: boolean;
 }
 
+
 export default function ProjectForm({
   project,
   onSave,
   loading,
 }: ProjectFormProps) {
+  const [fileSizes, setFileSizes] = useState<Record<string, number>>({});
   const [formData, setFormData] = useState<ProjectData>(project);
   const [uploading, setUploading] = useState<string | null>(null);
 
   const handleInputChange = (field: keyof ProjectData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   };
 
   const handleCoverImageUpload = async (
@@ -89,38 +99,44 @@ export default function ProjectForm({
   };
 
   const handleImageUpload = async (
-    sectionIndex: number,
-    imageIndex: number | null,
-    file: File
-  ) => {
-    setUploading(`${sectionIndex}-${imageIndex}`);
-    try {
-      const folder = `projects/${formData.slug || 'temp'}`;
-      const result = await uploadImage(file, folder);
-      const section = formData.muralSections[sectionIndex];
+  sectionIndex: number,
+  imageIndex: number | null,
+  file: File
+) => {
+  const key = `${sectionIndex}-${imageIndex}`;
+  
+  // Armazenar tamanho do arquivo
+  setFileSizes((prev) => ({ ...prev, [key]: file.size }));
 
-      if (section.type === 'full') {
-        handleSectionChange(sectionIndex, {
-          ...section,
-          imageUrl: result.url,
-        });
-      } else if (section.type === 'split' || section.type === 'trio') {
-        const newImagesUrl = [...section.imagesUrl];
-        if (imageIndex !== null) {
-          newImagesUrl[imageIndex] = result.url;
-        }
-        handleSectionChange(sectionIndex, {
-          ...section,
-          imagesUrl: newImagesUrl as any,
-        });
+  setUploading(key);
+  try {
+    const folder = `projects/${formData.slug || 'temp'}`;
+    const result = await uploadImage(file, folder);
+    const section = formData.muralSections[sectionIndex];
+
+    if (section.type === 'full') {
+      handleSectionChange(sectionIndex, {
+        ...section,
+        imageUrl: result.url,
+      });
+    } else if (section.type === 'split' || section.type === 'trio') {
+      const newImagesUrl = [...section.imagesUrl];
+      if (imageIndex !== null) {
+        newImagesUrl[imageIndex] = result.url;
       }
-    } catch (error) {
-      console.error('Erro ao fazer upload:', error);
-      alert('Erro ao fazer upload da imagem');
-    } finally {
-      setUploading(null);
+      handleSectionChange(sectionIndex, {
+        ...section,
+        imagesUrl: newImagesUrl as any,
+      });
     }
-  };
+
+  } catch (error) {
+    console.error('Erro ao fazer upload:', error);
+    alert('Erro ao fazer upload da imagem');
+  } finally {
+    setUploading(null);
+  }
+};
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,7 +150,7 @@ export default function ProjectForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white shadow text-black rounded-lg p-6 space-y-6"
+      className="bg-[var(--background)] text-black p-6 space-y-6"
     >
       {/* Informações Básicas */}
       <div className="space-y-4">
@@ -247,28 +263,33 @@ export default function ProjectForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Imagem de Capa
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleCoverImageUpload}
-            className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md"
-            disabled={uploading === 'cover'}
-          />
-          {formData.coverImage && (
-            <img
-              src={formData.coverImage}
-              alt="Cover"
-              className="mt-2 w-32 h-32 object-cover rounded"
-            />
-          )}
-          {uploading === 'cover' && (
-            <p className="text-sm text-gray-500">Uploading...</p>
-          )}
-        </div>
-
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Imagem de Capa
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleCoverImageUpload}
+                className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md"
+                disabled={uploading === 'cover'}
+              />
+              {fileSizes.cover && (
+                <p className="text-sm text-gray-500 mt-1">
+                  Tamanho: {formatFileSize(fileSizes.cover)}
+                </p>
+              )}
+              {formData.coverImage && (
+                <img
+                  src={formData.coverImage}
+                  alt="Cover"
+                  className="mt-2 w-32 h-32 object-cover rounded"
+                />
+              )}
+              {uploading === 'cover' && (
+                <p className="text-sm text-gray-500">Uploading...</p>
+              )}
+            </div>
+            
         <div className="flex items-center">
           <input
             type="checkbox"
@@ -286,7 +307,7 @@ export default function ProjectForm({
         </div>
       </div>
 
-      {/* Seções do Mural */}
+
       <div className="space-y-4">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold">Seções do Mural</h2>
@@ -333,12 +354,16 @@ export default function ProjectForm({
               handleImageUpload(index, imgIndex, file)
             }
             uploading={uploading}
+            fileSizes={fileSizes}
+            
+            formatFileSize={formatFileSize}
+
           />
         ))}
       </div>
 
       {/* Botões */}
-      <div className="flex justify-end gap-4 pt-4 border-t">
+      <div className="flex justify-end gap-4 pt-4 ">
         <button
           type="button"
           onClick={() => window.history.back()}
@@ -366,6 +391,8 @@ function SectionEditor({
   onRemove,
   onImageUpload,
   uploading,
+  fileSizes,
+  formatFileSize,
 }: {
   section: MuralSection;
   index: number;
@@ -373,6 +400,8 @@ function SectionEditor({
   onRemove: () => void;
   onImageUpload: (imageIndex: number | null, file: File) => void;
   uploading: string | null;
+  fileSizes: Record<string, number>;
+  formatFileSize: (bytes: number) => string;
 }) {
   if (section.type === 'full') {
     return (
@@ -382,7 +411,7 @@ function SectionEditor({
           <button
             type="button"
             onClick={onRemove}
-            className="text-red-600 text-sm"
+            className="text-red-600 text-sm cursor-pointer"
           >
             Remover
           </button>
@@ -402,6 +431,11 @@ function SectionEditor({
               disabled={uploading === `${index}-null`}
               className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md"
             />
+              {fileSizes[`${index}-null`] && (
+                  <p className="text-sm text-gray-500 mt-1">
+                    Tamanho: {formatFileSize(fileSizes[`${index}-null`] || 0)}
+                  </p>
+            )}
             {section.imageUrl && (
               <img
                 src={section.imageUrl}
@@ -445,23 +479,28 @@ function SectionEditor({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Imagem {imgIndex + 1}
               </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) onImageUpload(imgIndex, file);
-                }}
-                disabled={uploading === `${index}-${imgIndex}`}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              />
-              {section.imagesUrl[imgIndex] && (
-                <img
-                  src={section.imagesUrl[imgIndex]}
-                  alt="Preview"
-                  className="mt-2 w-full h-48 object-cover rounded"
-                />
-              )}
+<input
+  type="file"
+  accept="image/*"
+  onChange={(e) => {
+    const file = e.target.files?.[0];
+    if (file) onImageUpload(imgIndex, file);
+  }}
+  disabled={uploading === `${index}-${imgIndex}`}
+  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+/>
+{fileSizes[`${index}-${imgIndex}`] && (
+  <p className="text-sm text-gray-500 mt-1">
+    Tamanho: {formatFileSize(fileSizes[`${index}-${imgIndex}`])}
+  </p>
+)}
+{section.imagesUrl[imgIndex] && (
+  <img
+    src={section.imagesUrl[imgIndex]}
+    alt="Preview"
+    className="mt-2 w-full h-48 object-cover rounded"
+  />
+)}
               <input
                 type="text"
                 value={section.alts[imgIndex]}
@@ -499,23 +538,28 @@ function SectionEditor({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Imagem {imgIndex + 1}
               </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) onImageUpload(imgIndex, file);
-                }}
-                disabled={uploading === `${index}-${imgIndex}`}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              />
-              {section.imagesUrl[imgIndex] && (
-                <img
-                  src={section.imagesUrl[imgIndex]}
-                  alt="Preview"
-                  className="mt-2 w-full h-32 object-cover rounded"
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) onImageUpload(imgIndex, file);
+                  }}
+                  disabled={uploading === `${index}-${imgIndex}`}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
                 />
-              )}
+                {fileSizes[`${index}-${imgIndex}`] && (
+                  <p className="text-sm text-gray-500 mt-1">
+                    Tamanho: {formatFileSize(fileSizes[`${index}-${imgIndex}`])}
+                  </p>
+                )}
+                {section.imagesUrl[imgIndex] && (
+                  <img
+                    src={section.imagesUrl[imgIndex]}
+                    alt="Preview"
+                    className="mt-2 w-full h-32 object-cover rounded"
+                  />
+                )}
               <input
                 type="text"
                 value={section.alts[imgIndex]}
