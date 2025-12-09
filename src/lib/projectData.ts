@@ -2,6 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import prisma from './db';
 
 type MuralSectionFull = { type: 'full'; imageUrl: string; alt: string };
 type MuralSectionSplit = {
@@ -34,51 +35,119 @@ export type ProjectData = {
   muralSections: MuralSection[];
 };
 
-// --- FUNÇÕES DE LEITURA (AS "FERRAMENTAS") ---
-// Este código só roda no servidor.
-
-const projectsDirectory = path.join(process.cwd(), '_projects');
-
-export function getProjectBySlug(slug: string): ProjectData | undefined {
-  const fullPath = path.join(projectsDirectory, `${slug}.json`);
+export async function getProjectBySlug(
+  slug: string
+): Promise<ProjectData | undefined> {
   try {
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-    return JSON.parse(fileContents);
+    const project = await prisma.project.findUnique({
+      where: { slug },
+    });
+
+    if (!project) {
+      return undefined;
+    }
+
+    return {
+      id: project.id,
+      slug: project.slug,
+      title: project.title,
+      description: project.description,
+      date: project.date,
+      category: project.category,
+      coverImage: project.coverImage,
+      published: project.published,
+      muralSections: project.muralSections as MuralSection[],
+    };
   } catch (error) {
+    console.error('Erro ao buscar projeto:', error);
     return undefined;
   }
 }
 
-export function getAllProjects(): ProjectData[] {
-  const filenames = fs.readdirSync(projectsDirectory);
-
-  return filenames
-    .map((filename) => getProjectBySlug(filename.replace(/\.json$/, '')))
-    .filter((project): project is ProjectData => project !== undefined)
-    .filter((project) => project.published);
-}
-
-export function getAllProjectsIncludingDrafts(): ProjectData[] {
-  const filenames = fs.readdirSync(projectsDirectory);
-
-  return filenames
-    .map((filename) => getProjectBySlug(filename.replace(/\.json$/, '')))
-    .filter((project): project is ProjectData => project !== undefined);
-}
-
-export function saveProject(project: ProjectData): void {
-  const fullPath = path.join(projectsDirectory, `${project.slug}.json`);
-  fs.writeFileSync(fullPath, JSON.stringify(project, null, 2), 'utf8');
-}
-
-export function deleteProject(slug: string): boolean {
+export async function getAllProjects(): Promise<ProjectData[]> {
   try {
-    const fullPath = path.join(projectsDirectory, `${slug}.json`);
-    if (fs.existsSync(fullPath)) {
-      fs.unlinkSync(fullPath);
-      return true;
-    }
-    return false;
+    const projects = await prisma.project.findMany({
+      where: { published: true },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return projects.map((project) => ({
+      id: project.id,
+      slug: project.slug,
+      title: project.title,
+      description: project.description,
+      date: project.date,
+      category: project.category,
+      coverImage: project.coverImage,
+      published: project.published,
+      muralSections: project.muralSections as MuralSection[],
+    }));
+  } catch (error) {
+    console.error('Erro ao listar projetos:', error);
+    return [];
+  }
+}
+
+export async function getAllProjectsIncludingDrafts(): Promise<ProjectData[]> {
+  try {
+    const projects = await prisma.project.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return projects.map((project) => ({
+      id: project.id,
+      slug: project.slug,
+      title: project.title,
+      description: project.description,
+      date: project.date,
+      category: project.category,
+      coverImage: project.coverImage,
+      published: project.published,
+      muralSections: project.muralSections as MuralSection[],
+    }));
+  } catch (error) {
+    console.error('Erro ao listar projetos:', error);
+    return [];
+  }
+}
+
+export async function saveProject(project: ProjectData): Promise<void> {
+  try {
+    await prisma.project.upsert({
+      where: { slug: project.slug },
+      update: {
+        title: project.title,
+        description: project.description,
+        date: project.date,
+        category: project.category,
+        coverImage: project.coverImage,
+        published: project.published,
+        muralSections: project.muralSections as any,
+      },
+      create: {
+        id: project.id || undefined,
+        slug: project.slug,
+        title: project.title,
+        description: project.description,
+        date: project.date,
+        category: project.category,
+        coverImage: project.coverImage,
+        published: project.published,
+        muralSections: project.muralSections as any,
+      },
+    });
+  } catch (error) {
+    console.error('Erro ao salvar projeto:', error);
+    throw error;
+  }
+}
+
+export async function deleteProject(slug: string): Promise<boolean> {
+  try {
+    await prisma.project.delete({
+      where: { slug },
+    });
+    return true;
   } catch (error) {
     console.error('Erro ao deletar projeto:', error);
     return false;

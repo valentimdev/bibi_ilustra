@@ -14,7 +14,7 @@ export async function GET() {
   }
 
   try {
-    const projects = getAllProjectsIncludingDrafts();
+    const projects = await getAllProjectsIncludingDrafts();
 
     // Retornar apenas informações básicas para a lista
     const projectsList = projects.map((project) => ({
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       project.id = Date.now().toString();
     }
 
-    saveProject(project);
+    await saveProject(project);
 
     return NextResponse.json({ success: true, project }, { status: 201 });
   } catch (error) {

@@ -134,7 +134,7 @@ export default function ProjectForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white shadow rounded-lg p-6 space-y-6"
+      className="bg-white shadow text-black rounded-lg p-6 space-y-6"
     >
       {/* Informações Básicas */}
       <div className="space-y-4">
@@ -169,30 +169,67 @@ export default function ProjectForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-black mb-1">
             Descrição
           </label>
           <textarea
             value={formData.description}
             onChange={(e) => handleInputChange('description', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            className="resize-none w-full px-3 py-2 border border-gray-300 rounded-md"
             rows={4}
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Data
-            </label>
-            <input
-              type="text"
-              value={formData.date}
-              onChange={(e) => handleInputChange('date', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              placeholder="Novembro de 2025"
-            />
-          </div>
+        <div>
+    <label className="block text-sm font-medium text-black mb-1">
+      Data
+    </label>
+    <div className="grid grid-cols-2 gap-2">
+      <select
+        value={formData.date.split(' de ')[0] || ''}
+        onChange={(e) => {
+          const year = formData.date.split(' de ')[1] || '';
+          const newDate = year ? `${e.target.value} de ${year}` : e.target.value;
+          handleInputChange('date', newDate);
+        }}
+        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+      >
+        <option value="">Mês</option>
+        <option value="Janeiro">Janeiro</option>
+        <option value="Fevereiro">Fevereiro</option>
+        <option value="Março">Março</option>
+        <option value="Abril">Abril</option>
+        <option value="Maio">Maio</option>
+        <option value="Junho">Junho</option>
+        <option value="Julho">Julho</option>
+        <option value="Agosto">Agosto</option>
+        <option value="Setembro">Setembro</option>
+        <option value="Outubro">Outubro</option>
+        <option value="Novembro">Novembro</option>
+        <option value="Dezembro">Dezembro</option>
+      </select>
+      <select
+        value={formData.date.split(' de ')[1] || ''}
+        onChange={(e) => {
+          const month = formData.date.split(' de ')[0] || '';
+          const newDate = month ? `${month} de ${e.target.value}` : e.target.value;
+          handleInputChange('date', newDate);
+        }}
+        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+      >
+        <option value="">Ano</option>
+        {Array.from({ length: 10 }, (_, i) => {
+          const year = new Date().getFullYear() - 8 + i;
+          return (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          );
+        })}
+      </select>
+    </div>
+  </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -217,7 +254,7 @@ export default function ProjectForm({
             type="file"
             accept="image/*"
             onChange={handleCoverImageUpload}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md"
             disabled={uploading === 'cover'}
           />
           {formData.coverImage && (
@@ -257,28 +294,28 @@ export default function ProjectForm({
             <button
               type="button"
               onClick={() => handleAddSection('full')}
-              className="px-3 py-1 bg-indigo-600 text-white rounded text-sm"
+              className="cursor-pointer px-3 py-1 bg-[var(--secondary)] text-white rounded text-sm hover:bg-[var(--secondary-hover)]"
             >
               + Full
             </button>
             <button
               type="button"
               onClick={() => handleAddSection('split')}
-              className="px-3 py-1 bg-indigo-600 text-white rounded text-sm"
+              className="cursor-pointer px-3 py-1 bg-[var(--secondary)] text-white rounded text-sm hover:bg-[var(--secondary-hover)]"
             >
               + Split
             </button>
             <button
               type="button"
               onClick={() => handleAddSection('trio')}
-              className="px-3 py-1 bg-indigo-600 text-white rounded text-sm"
+              className="cursor-pointer px-3 py-1 bg-[var(--secondary)] text-white rounded text-sm hover:bg-[var(--secondary-hover)]"
             >
               + Trio
             </button>
             <button
               type="button"
               onClick={() => handleAddSection('text')}
-              className="px-3 py-1 bg-indigo-600 text-white rounded text-sm"
+              className="cursor-pointer px-3 py-1 bg-[var(--secondary)] text-white rounded text-sm hover:bg-[var(--secondary-hover)]"
             >
               + Text
             </button>
@@ -305,14 +342,14 @@ export default function ProjectForm({
         <button
           type="button"
           onClick={() => window.history.back()}
-          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+          className="cursor-pointer px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={loading}
-          className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
+          className="cursor-pointer px-4 py-2 bg-[var(--secondary)] text-white rounded-md hover:bg-[var(--secondary-hover)] disabled:opacity-50"
         >
           {loading ? 'Salvando...' : 'Salvar Projeto'}
         </button>
@@ -352,7 +389,7 @@ function SectionEditor({
         </div>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className=" block text-sm font-medium text-gray-700 mb-1">
               Imagem
             </label>
             <input
@@ -363,7 +400,7 @@ function SectionEditor({
                 if (file) onImageUpload(null, file);
               }}
               disabled={uploading === `${index}-null`}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md"
             />
             {section.imageUrl && (
               <img
@@ -516,7 +553,7 @@ function SectionEditor({
         <textarea
           value={section.content}
           onChange={(e) => onChange({ ...section, content: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md resize-none text-black"
           rows={6}
         />
       </div>

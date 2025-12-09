@@ -19,7 +19,7 @@ export async function GET(
 
   try {
     const { slug } = await params;
-    const project = getProjectBySlug(slug);
+    const project = await getProjectBySlug(slug);
 
     if (!project) {
       return NextResponse.json(
@@ -61,7 +61,7 @@ export async function PUT(
       );
     }
 
-    saveProject(project);
+    await saveProject(project);
 
     return NextResponse.json({ success: true, project });
   } catch (error) {
@@ -85,7 +85,7 @@ export async function DELETE(
 
   try {
     const { slug } = await params;
-    const deleted = deleteProject(slug);
+    const deleted = await deleteProject(slug);
 
     if (!deleted) {
       return NextResponse.json(
