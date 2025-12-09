@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { draftMode } from 'next/headers';
 import { getProjectBySlug } from '@/lib/projectData';
+import Link from 'next/link';
 
 type ProjectPageProps = {
   params: Promise<{
@@ -30,7 +31,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   };
 
   return (
-    <section className="w-full pt-20 pb-10">
+    <section className="w-full pt-0 pb-10">
       {isEnabled && (
         <div className="bg-pink-600 text-white text-center p-2 mb-8">
           Você está em **Modo de Preview**.{' '}
@@ -40,10 +41,26 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </div>
       )}
 
-      <header className="text-center mb-12  px-4 py-6 mx-auto">
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900">
-          {project.title}
-        </h1>
+      <header className="text-center mb-12 px-4 py-6 mx-auto">
+        <div className="grid grid-cols-3 items-center border border-black">
+          <div className="flex justify-start border border-black">
+            <Link href="/">
+              <button className="cursor-pointer bg-[var(--secondary)] text-white px-4 py-2 rounded-md hover:bg-[var(--secondary-hover)]">
+                Voltar
+              </button>
+            </Link>
+          </div>
+          
+      
+          <div className="flex justify-center border border-black">
+            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900">
+              {project.title}
+            </h1>
+          </div>
+          
+          <div></div>
+        </div>
+      
         <p className="mt-4 text-lg text-gray-500">{project.date}</p>
         <p className="mt-4 text-xl text-left text-gray-800 mx-auto whitespace-pre-wrap">
           {project.description}

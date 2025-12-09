@@ -30,7 +30,7 @@ function Header() {
 
   const isActive = (path: string) => {
     if (path === '/') {
-      return pathname === '/' || pathname?.startsWith('/work');
+      return pathname === '/'
     }
     return pathname === path;
   };
