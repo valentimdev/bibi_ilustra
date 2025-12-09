@@ -4,8 +4,11 @@ import { useState } from 'react';
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 // import Katty from '@/public/bianca_katty_logo.svg'
 function Header() {
+  const pathname = usePathname();
+
   const svgBehanceOff = '/icons/behance_hover.svg';
   const svgBehanceOn = '/icons/behance.svg';
   const svgIgOff = '/icons/ig_hover.svg';
@@ -24,6 +27,13 @@ function Header() {
   const handleMouseLeave = () => {
     setLogoSrc('/logos/bianca_katty_logo.svg');
   };
+
+  const isActive = (path: string) => {
+    if (path === '/') {
+      return pathname === '/' || pathname?.startsWith('/work');
+    }
+    return pathname === path;
+  };
   return (
     <header
       className="w-full"
@@ -37,20 +47,38 @@ function Header() {
       <nav className="max-w-8xl mx-10 grid grid-cols-3 items-center h-30 px-4 sm:px-6 lg:px-8">
         {/* Coluna 1: Links de navegação */}
         <div className="hidden md:flex flex-row justify-start items-center gap-3">
+        <Link href="/">
+            <p
+              className={`font-extrabold transition-all duration-400 ease-in-out ${
+                isActive('/')
+                  ? 'text-[var(--accent)]'
+                  : 'hover:text-[var(--accent)]'
+              }`}
+            >
+              WORK
+            </p>
+          </Link>
+
           <Link href="/about">
-            <p className="font-extrabold hover:text-[var(--accent)] transition-all duration-400 ease-in-out">
+            <p
+              className={`font-extrabold transition-all duration-400 ease-in-out ${
+                isActive('/about')
+                  ? 'text-[var(--accent)]'
+                  : 'hover:text-[var(--accent)]'
+              }`}
+            >
               ABOUT
             </p>
           </Link>
 
           <Link href="/">
-            <p className="font-extrabold hover:text-[var(--accent)] transition-all duration-400 ease-in-out">
-              WORK
-            </p>
-          </Link>
-
-          <Link href="/">
-            <p className="font-extrabold hover:text-[var(--accent)] transition-all duration-400 ease-in-out">
+            <p
+              className={`font-extrabold transition-all duration-400 ease-in-out ${
+                isActive('/contact')
+                  ? 'text-[var(--accent)]'
+                  : 'hover:text-[var(--accent)]'
+              }`}
+            >
               CONTACT
             </p>
           </Link>
