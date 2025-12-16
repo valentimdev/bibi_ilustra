@@ -7,6 +7,7 @@ export default function About() {
       <div className="flex flex-row gap-8 px-8 py-8 max-w-7xl mx-auto w-full border border-black">
       <div className="relative w-[48%] flex-shrink-0 min-h-[600px] border">
           <Image
+           unoptimized
             src="/images/bibi_foto.jpg"
             alt="Foto de Bianca Tavares"
             fill

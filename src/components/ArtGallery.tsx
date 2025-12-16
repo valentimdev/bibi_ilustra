@@ -30,6 +30,7 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
                   <Link href={`/work/${project.slug}`} key={project.id}>
                     <div className="group relative block w-full aspect-square overflow-hidden cursor-pointer">
                       <Image
+                      unoptimized
                         src={project.coverImage}
                         alt={project.title}
                         fill
@@ -61,6 +62,7 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
                   <Link href={`/work/${project.slug}`} key={project.id}>
                     <div className="group relative block w-full aspect-square overflow-hidden cursor-pointer">
                       <Image
+                      unoptimized
                         src={project.coverImage}
                         alt={project.title}
                         fill

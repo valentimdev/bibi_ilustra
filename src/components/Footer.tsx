@@ -35,6 +35,7 @@ const Footer: React.FC = () => {
             className="text-gray-800 hover:opacity-75 transition-opacity"
           >
             <Image
+            unoptimized
               src={link.icon}
               alt={link.name}
               width={40}

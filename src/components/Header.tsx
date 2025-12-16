@@ -71,7 +71,7 @@ function Header() {
             </p>
           </Link>
 
-          <Link href="/">
+          <Link href="/contact">
             <p
               className={`font-extrabold transition-all duration-400 ease-in-out ${
                 isActive('/contact')
@@ -92,6 +92,7 @@ function Header() {
             onMouseLeave={handleMouseLeave}
           >
             <Image
+              
               src={logoSrc}
               alt="Logo"
               width={350}
@@ -113,6 +114,7 @@ function Header() {
                 onMouseLeave={() => setIsBehanceHovered(false)}
               >
                 <Image
+                unoptimized
                   src={!isBehanceHovered ? svgBehanceOn : svgBehanceOff}
                   alt="Behance"
                   width={40}
@@ -130,6 +132,7 @@ function Header() {
                 onMouseLeave={() => setIsIgHovered(false)}
               >
                 <Image
+                unoptimized
                   src={!isIgHovered ? svgIgOn : svgIgOff}
                   alt="Instagram"
                   width={40}
@@ -147,6 +150,7 @@ function Header() {
                 onMouseLeave={() => setIsLinkedInHovered(false)}
               >
                 <Image
+                unoptimized
                   src={!isLinkedInHovered ? svgLinkedInOn : svgLinkedInOff}
                   alt="LinkedIn"
                   width={40}

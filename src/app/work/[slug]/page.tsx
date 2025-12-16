@@ -84,6 +84,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     />
                   ) : (
                     <Image
+                      unoptimized
                       src={section.imageUrl}
                       alt={section.alt}
                       width={1400}
@@ -100,6 +101,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <div className="flex flex-col md:flex-row gap-1 md:gap-1">
                 <div className="w-full md:w-1/2 aspect-[3/4] relative overflow-hidden ">
                   <Image
+                  unoptimized
                     src={section.imagesUrl[0]}
                     alt={section.alts[0]}
                     fill
@@ -109,6 +111,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 </div>
                 <div className="w-full md:w-1/2 aspect-[3/4] relative overflow-hidden">
                   <Image
+                  unoptimized
                     src={section.imagesUrl[1]}
                     alt={section.alts[1]}
                     fill
@@ -126,6 +129,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     className="w-full aspect-square relative overflow-hidden "
                   >
                     <Image
+                    unoptimized
                       src={imageUrl}
                       alt={section.alts[i]}
                       fill
