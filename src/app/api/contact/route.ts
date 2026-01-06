@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
 
     const { data, error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
-      to: 'valentimaragao@gmail.com', 
+      to: 'biancatavaresilustra@gmail.com', 
       subject: `Nova mensagem de contato de ${name}`,
       html: `
         <h2>Mensangem do bibi ilustra :P</h2>
