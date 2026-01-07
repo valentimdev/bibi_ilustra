@@ -58,16 +58,19 @@ export default function About() {
   };
 
   return (
-    <div className="flex flex-col w-full min-h-screen justify-center items-center py-20 mb-10 border border-black">
-      <div className="flex flex-col w-full max-w-lg px-4 md:px-0 justify-center border border-black">
-        
-        <h1 className="text-lg text-center text-gray-900 mb-6 leading-tight">
-          Whether you have a project in mind, a question, or just want to say hello, I'd love to hear from you. 
-          Feel free to use the form below or reach me directly via email at:
+    <div className="flex flex w-full min-h-screen justify-center items-center py-20 mb-10 border border-black">
+      <div className="flex flex-row w-full max-w-lg px-4 md:px-0 justify-center border border-black gap-10">
+        <div className="border border-amber-300">
+        <h1 className="text-lg text-center text-gray-500 mb-6 leading-tight">
+          Have any ideas you'd like to share?
+        <h1 className="text-lg text-center text-gray-500 mb-6 leading-tight">
+          Feel free to reach out! :)
         </h1>
-        <p className="text-xl md:text-2xl text-center font-extrabold text-gray-900 mb-8 leading-tight break-all">
+        </h1>
+        <p className="text-xl md:text-xl text-center font-extrabold text-[var(--secondary)] mb-8 leading-tight break-all">
           biancatavaresilustra@gmail.com
         </p>
+        </div>
         
         {status.type && (
           <div className={`mb-6 p-3 rounded-md text-center text-sm font-medium ${
@@ -92,7 +95,7 @@ export default function About() {
             />
 
             <div className="flex flex-col gap-1">
-              <label htmlFor="name" className="text-gray-900 font-extrabold text-sm">Name</label>
+              {/* <label htmlFor="name" className="text-gray-900 font-extrabold text-sm">Name</label> */}
               <input 
                 id="name"
                 name="name"
@@ -108,7 +111,7 @@ export default function About() {
             </div>
 
             <div className="flex flex-col gap-1">
-              <label htmlFor="email" className="text-gray-900 font-extrabold text-sm">Email</label>
+              {/* <label htmlFor="email" className="text-gray-900 font-extrabold text-sm">Email</label> */}
               <input 
                 id="email"
                 name="email"
@@ -124,7 +127,7 @@ export default function About() {
             </div>
 
             <div className="flex flex-col gap-1">
-              <label htmlFor="message" className="text-gray-900 font-extrabold text-sm">Message</label>
+              {/* <label htmlFor="message" className="text-gray-900 font-extrabold text-sm">Message</label> */}
               <textarea 
                 id="message"
                 name="message"
