@@ -58,7 +58,7 @@ export default function About() {
       const data = await response.json();
 
       if (response.ok) {
-        setStatus({ type: 'success', message: 'Mensagem enviada com sucesso!' });
+        setStatus({ type: 'success', message: 'Message sent successfully!' });
         setFormData({ name: '', email: '', message: '', gotcha: '' }); 
         setErrors({});
       } else {
@@ -140,15 +140,7 @@ const validateField = (name: string, value: string): string => {
             />
         </div>
         <div className="w-1/2  flex flex-col">
-        {status.type && (
-          <div className={`mb-6 p-3 rounded-md text-center text-sm font-medium ${
-            status.type === 'success' 
-              ? 'bg-green-100 text-green-800 border border-green-300' 
-              : 'bg-red-100 text-red-800 border border-red-300'
-          }`}>
-            {status.message}
-          </div>
-        )}
+
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full ">
             
             <input 
@@ -162,7 +154,6 @@ const validateField = (name: string, value: string): string => {
             />
 
             <div className="flex flex-col gap-1">
-              {/* <label htmlFor="name" className="text-gray-900 font-extrabold text-sm">Name</label> */}
               <input 
                 id="name"
                 name="name"
@@ -182,7 +173,6 @@ const validateField = (name: string, value: string): string => {
             </div>
 
             <div className="flex flex-col gap-1">
-              {/* <label htmlFor="email" className="text-gray-900 font-extrabold text-sm">Email</label> */}
               <input 
                 id="email"
                 name="email"
@@ -202,7 +192,6 @@ const validateField = (name: string, value: string): string => {
             </div>
 
             <div className="flex flex-col gap-1">
-              {/* <label htmlFor="message" className="text-gray-900 font-extrabold text-sm">Message</label> */}
               <textarea 
                 id="message"
                 name="message"
@@ -219,16 +208,28 @@ const validateField = (name: string, value: string): string => {
                 <p className="text-center text-red-600 text-xs mt-1">{errors.message}</p>
               )}
             </div>
-          <div className="flex justify-end items-end">
-            <button 
-              type="submit" 
-              disabled={isLoading}
-              className={` cursor-pointer w-1/5  mt-2 p-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-2xl font-bold transition-all ${
-                isLoading ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-            >
-              {isLoading ? 'Sending...' : 'Send'}
-            </button>
+            <div className="flex justify-between items-center gap-3 mt-2">
+              <div className="flex-1">
+                  {status.type && (
+                    <p className={`text-sm font-medium ${
+                      status.type === 'success' 
+                        ? 'text-green-600' 
+                        : 'text-red-600'
+                    }`}>
+                      {status.message}
+                    </p>
+                  )}
+              </div>
+  
+              <button 
+                type="submit" 
+                disabled={isLoading}
+                className={`cursor-pointer w-auto px-8 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-2xl font-bold transition-all ${
+                  isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                {isLoading ? 'Sending...' : 'Send'}
+              </button>
             </div>
         </form>
         </div>

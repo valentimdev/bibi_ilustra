@@ -89,7 +89,7 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
       </div>
 
       {/* Botão fixo na parte inferior */}
-      <div className="sticky bottom-0 left-0 right-0 flex justify-center pb-4 z-50 pt-10">
+      <div className="sticky bottom-0 left-0 right-0 flex justify-center pb-4 md:z-50 z-10 pt-10">
         <div className="relative inline-flex rounded-full border-2 border-[var(--primary)] overflow-hidden bg-[var(--primary)]">
           <button
             onClick={() => handleToggleCategory('design')}
