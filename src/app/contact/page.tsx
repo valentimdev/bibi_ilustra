@@ -1,7 +1,6 @@
 'use client'; 
 
 import React, { useState } from 'react';
-import Image from 'next/image';
 
 
 interface FormData {
@@ -115,9 +114,11 @@ const validateField = (name: string, value: string): string => {
     }
   };
   return (
-    <div className="flex flex-col w-full min-h-screen justify-center items-center pt-20 pb-30 px-5 border border-black">
-        <div className="flex flex-row w-full">
-        <div className="border border-amber-300 w-1/2 pt-10">
+    <div className="overflow-hidden flex flex-col w-full  justify-center  items-center pt-20 pb-30 px-5  min-h-[calc(100vh-180px)]">
+      <div className=" flex flex-col w-full   ">
+        </div>
+        <div className="flex flex-row w-full gap-8">
+        <div className=" w-1/2 pt-3 flex flex-col items-center justify-center">
         <h1 className="text-lg text-center text-gray-500 leading-tight">
           Have any ideas you'd like to share?
           </h1>
@@ -125,11 +126,20 @@ const validateField = (name: string, value: string): string => {
           Feel free to reach out! :)
         
         </h1>
-        <h1 className="italic text-xl md:text-3xl text-center font-extrabold text-[var(--secondary)] mb-8 leading-tight break-all">
+        <h1 className="italic text-xl md:text-3xl text-center font-extrabold text-[var(--secondary)] mb-0 leading-tight break-all">
           biancatavaresilustra@gmail.com
         </h1>
+        <video
+              src="/icons/gatos_site_bibi_azul.webm"
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls={false}
+              className="w-full h-auto mt-0 "
+            />
         </div>
-        
+        <div className="w-1/2  flex flex-col">
         {status.type && (
           <div className={`mb-6 p-3 rounded-md text-center text-sm font-medium ${
             status.type === 'success' 
@@ -139,8 +149,7 @@ const validateField = (name: string, value: string): string => {
             {status.message}
           </div>
         )}
-        <div className="w-1/2">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full border border-black">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full ">
             
             <input 
               name="gotcha"
@@ -159,8 +168,7 @@ const validateField = (name: string, value: string): string => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                onBlur={handleBlur}
-                maxLength={100} 
+                maxLength={50} 
                 type="text" 
                 placeholder="Name" 
                 className={`text-gray-900 w-full p-2 border-2 border-gray-500 rounded-md focus:outline-none focus:border-black transition-colors ${
@@ -180,7 +188,6 @@ const validateField = (name: string, value: string): string => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                onBlur={handleBlur}
                 maxLength={255} 
                 type="text" 
                 placeholder="Email" 
@@ -201,10 +208,9 @@ const validateField = (name: string, value: string): string => {
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
-                onBlur={handleBlur}
                 maxLength={1500} 
                 placeholder="Type your ideas here :D" 
-               className={`h-32 w-full p-2 border-2 rounded-md resize-none text-gray-900 focus:outline-none transition-colors ${
+                className={`h-32 w-full p-2 border-2 rounded-md resize-none text-gray-900 focus:outline-none transition-colors ${
                   errors.message ? 'border-red-500 focus:border-red-500' : 'border-gray-500 focus:border-black'
                 }`}                
                 disabled={isLoading}
@@ -227,19 +233,7 @@ const validateField = (name: string, value: string): string => {
         </form>
         </div>
         </div>
-        <div className="border border-black flex flex-col w-full">
-          <Image
-          src="/icons/gatos_site_bibi.svg"
-          alt="Cats facing multiple directions"
-          width={1400}
-          height={0}
-          sizes="(max-width: 1000px) 80vw, 1000px"
-          className="w-full h-auto cursor-zoom-in"
-          style={{ height: '1/2' }}
-          >
-
-          </Image>
-        </div>
       </div>
+      
   );
 }

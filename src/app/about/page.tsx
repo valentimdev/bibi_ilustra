@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function About() {
   return (
-    <div className="flex flex-col w-full min-h-screen py-12 gap-16">
+    <div className="flex flex-col w-full min-h-screen py-8 gap-16">
       <div className="flex flex-row gap-8 px-8 py-8 max-w-7xl mx-auto w-full border border-black">
       <div className="relative w-[48%] flex-shrink-0 min-h-[600px] border">
           <Image
@@ -136,6 +136,7 @@ export default function About() {
                   Introduction to Concept Art for Games
                 </p>
               </div>
+              
             </div>
           </div>
         </div>
