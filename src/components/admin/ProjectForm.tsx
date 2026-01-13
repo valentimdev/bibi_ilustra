@@ -274,10 +274,12 @@ export default function ProjectForm({
               Categoria
             </label>
             <select
-              value={formData.category}
+              required
+              value={formData.category || ""} 
               onChange={(e) => handleInputChange('category', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md"
             >
+              <option value="" disabled>Selecione uma categoria</option>
               <option value="design">Design</option>
               <option value="ilustracao">Ilustração</option>
             </select>
