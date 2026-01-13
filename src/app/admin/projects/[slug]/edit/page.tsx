@@ -12,6 +12,7 @@ export default function EditProjectPage() {
   const [project, setProject] = useState<ProjectData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     loadProject();
@@ -55,6 +56,30 @@ export default function EditProjectPage() {
       setSaving(false);
     }
   };
+  const handleDelete = async () => {
+    if (!confirm(`Tem certeza que deseja deletar o projeto "${project?.title}"? Esta ação não pode ser desfeita.`)) {
+      return;
+    }
+
+    setDeleting(true);
+    try {
+      const response = await fetch(`/api/admin/projects/${slug}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao deletar projeto');
+      }
+
+      alert('Projeto deletado com sucesso!');
+      router.push('/admin');
+    } catch (error) {
+      console.error('Erro:', error);
+      alert('Erro ao deletar projeto');
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -73,6 +98,13 @@ export default function EditProjectPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Editar Projeto</h1>
+          <button
+            onClick={handleDelete}
+            disabled={deleting || saving}
+            className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {deleting ? 'Deletando...' : 'Deletar Projeto'}
+          </button>
         </div>
         <ProjectForm project={project} onSave={handleSave} loading={saving} />
       </div>

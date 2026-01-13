@@ -6,6 +6,7 @@ import {
   deleteProject,
   type ProjectData,
 } from '@/lib/projectData';
+import { revalidatePath } from 'next/cache';
 
 export async function GET(
   request: NextRequest,
@@ -63,6 +64,9 @@ export async function PUT(
 
     await saveProject(project);
 
+    revalidatePath('/', 'page');
+    revalidatePath(`/work/${slug}`, 'page');
+
     return NextResponse.json({ success: true, project });
   } catch (error) {
     console.error('Erro ao salvar projeto:', error);
@@ -93,6 +97,9 @@ export async function DELETE(
         { status: 404 }
       );
     }
+
+    revalidatePath('/', 'page');
+    revalidatePath(`/work/${slug}`, 'page');
 
     return NextResponse.json({ success: true });
   } catch (error) {

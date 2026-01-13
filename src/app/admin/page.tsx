@@ -17,6 +17,7 @@ export default function AdminDashboard() {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   useEffect(() => {
     checkAuth();
@@ -51,6 +52,30 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDelete = async (slug: string, title: string) => {
+    if (!confirm(`Tem certeza que deseja deletar o projeto "${title}"? Esta ação não pode ser desfeita.`)) {
+      return;
+    }
+
+    setDeleting(slug);
+    try {
+      const response = await fetch(`/api/admin/projects/${slug}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao deletar projeto');
+      }
+
+      await loadProjects();
+      alert('Projeto deletado com sucesso!');
+    } catch (error) {
+      console.error('Erro:', error);
+      alert('Erro ao deletar projeto');
+    } finally {
+      setDeleting(null);
+    }
+  };
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
     router.push('/bibi-login-admin');
@@ -135,6 +160,13 @@ export default function AdminDashboard() {
                     >
                       Ver
                     </Link>
+                    <button
+                      onClick={() => handleDelete(project.slug, project.title)}
+                      disabled={deleting === project.slug}
+                      className="text-red-600 hover:text-red-800 font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {deleting === project.slug ? 'Deletando...' : 'Deletar'}
+                    </button>
                   </div>
                 </div>
               ))

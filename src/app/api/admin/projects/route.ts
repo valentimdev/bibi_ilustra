@@ -5,6 +5,7 @@ import {
   saveProject,
   type ProjectData,
 } from '@/lib/projectData';
+import { revalidatePath } from 'next/cache';
 
 export async function GET() {
   try {
@@ -53,6 +54,9 @@ export async function POST(request: NextRequest) {
 
     await saveProject(project);
 
+    revalidatePath('/', 'page');
+    revalidatePath('/work/[slug]', 'page');
+    
     return NextResponse.json({ success: true, project }, { status: 201 });
   } catch (error) {
     console.error('Erro ao criar projeto:', error);

@@ -28,6 +28,7 @@ export async function POST(request: NextRequest) {
       'image/webp',
       'image/gif',
       'video/mp4',
+      'video/webm',
     ];
 
     if (!allowedTypes.includes(file.type)) {
