@@ -22,7 +22,7 @@ const socialLinks = [
 const Footer: React.FC = () => {
   return (
     <footer
-      className="flex flex-col items-center justify-center w-full pt-px4 pb-2 -mt-12"
+      className="flex flex-col items-center justify-center w-full pt-px4 pb-3 mb-3 -mt-12"
 
     >
       <div className="flex flex-row items-center gap-6 mb-2">
