@@ -64,8 +64,8 @@ export async function PUT(
 
     await saveProject(project);
 
-    revalidatePath('/', 'page');
-    revalidatePath(`/work/${slug}`, 'page');
+    revalidatePath('/');
+    revalidatePath(`/work/${slug}`);
 
     return NextResponse.json({ success: true, project });
   } catch (error) {

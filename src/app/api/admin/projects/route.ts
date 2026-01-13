@@ -54,8 +54,7 @@ export async function POST(request: NextRequest) {
 
     await saveProject(project);
 
-    revalidatePath('/', 'page');
-    revalidatePath('/work/[slug]', 'page');
+    revalidatePath('/');
     
     return NextResponse.json({ success: true, project }, { status: 201 });
   } catch (error) {
