@@ -32,6 +32,7 @@ export type ProjectData = {
   coverImage: string;
   published: boolean;
   category: string;
+  order?: number;
   muralSections: MuralSection[];
 };
 
@@ -55,6 +56,7 @@ export async function getProjectBySlug(
       date: project.date,
       category: project.category,
       coverImage: project.coverImage,
+      order: project.order,
       published: project.published,
       muralSections: project.muralSections as MuralSection[],
     };

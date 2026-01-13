@@ -32,7 +32,8 @@ model Project {
   category      String
   coverImage    String
   published     Boolean  @default(false)
-  muralSections Json    
+  muralSections Json 
+  order         Int      @default(0)   
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
   
