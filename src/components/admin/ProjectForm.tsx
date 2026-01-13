@@ -483,7 +483,7 @@ function SectionEditor({
             </label>
             <input
               type="file"
-              accept="image/*,video/mp4"
+              accept="image/*,video/mp4,video/webm"
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) onImageUpload(null, file);
