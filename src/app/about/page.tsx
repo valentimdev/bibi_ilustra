@@ -8,7 +8,7 @@ export default function About() {
       <div className="relative w-[48%] flex-shrink-0 min-h-[600px] border">
           <Image
            unoptimized
-            src="/images/bibi_foto.jpg"
+            src="/images/bibi_foto.png"
             alt="Foto de Bianca Tavares"
             fill
             className="object-contain"

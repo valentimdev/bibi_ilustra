@@ -180,6 +180,15 @@ export default function ProjectForm({
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
+            Ordem de exibição (número menor aparece primeiro)
+          </label>
+          <input
+          type="number"
+          value={formData.order ?? 0}
+          onChange={(e) => handleInputChange('order', e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+           />
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Título *
           </label>
           <input

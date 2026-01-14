@@ -31,28 +31,26 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   };
 
   return (
-    <section className="w-full pt-0 pb-10">
-      {isEnabled && (
-        <div className="bg-pink-600 text-white text-center p-2 mb-8">
-          Você está em **Modo de Preview**.{' '}
-          <a href="/api/draft/disable" className="underline font-bold">
-            Sair do Preview
-          </a>
-        </div>
-      )}
+    <section className="w-full pt-10 pb-10 ">
 
-      <header className="text-center mb-12 px-4 py-6 mx-auto">
-        <div className="grid grid-cols-3 items-center border border-black">
-          <div className="flex justify-start border border-black">
+      <header className="text-center px-4 py-6 mx-auto">
+        <div className="grid grid-cols-3 items-center ">
+          <div className="flex justify-start ">
             <Link href="/">
-              <button className="cursor-pointer bg-[var(--secondary)] text-white px-4 py-2 rounded-md hover:bg-[var(--secondary-hover)]">
-                Voltar
+              <button className="cursor-pointer">
+                <Image
+                  src="/icons/arrow-badge-left.svg"
+                  alt="Voltar"
+                  width={42}
+                  height={42}
+                  className="cursor-pointer"
+                />
               </button>
             </Link>
           </div>
           
       
-          <div className="flex justify-center border border-black">
+          <div className="flex justify-center ">
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900">
               {project.title}
             </h1>
@@ -61,8 +59,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <div></div>
         </div>
       
-        <p className="mt-4 text-lg text-gray-500">{project.date}</p>
-        <p className="mt-4 text-xl text-left text-gray-800 mx-auto whitespace-pre-wrap">
+        <p className="mt-2 text-lg text-gray-500">{project.date}</p>
+        <p className="mt-2 text-xl text-left text-gray-800 mx-auto whitespace-pre-wrap">
           {project.description}
         </p>
       </header>

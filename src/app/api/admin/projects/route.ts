@@ -24,6 +24,7 @@ export async function GET() {
       title: project.title,
       category: project.category,
       published: project.published,
+      order: project.order ?? 0,
     }));
 
     return NextResponse.json(projectsList);

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 interface Project {
+  order: number;
   id: string;
   slug: string;
   title: string;
@@ -134,7 +135,7 @@ export default function AdminDashboard() {
                       {project.title}
                     </h3>
                     <p className="text-sm text-gray-500">
-                      {project.slug} • {project.category}
+                      {project.slug} • Categoria: {project.category} • Ordem: {project.order}
                     </p>
                   </div>
                   <div className="flex items-center gap-4">

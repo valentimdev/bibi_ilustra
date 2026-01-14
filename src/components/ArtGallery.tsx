@@ -17,15 +17,21 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
   };
 
   return (
-    <section className="w-full h-full py-10 pb-24">
+    <section className="w-full h-full py-10 pb-24 ">
       <div className="max-w-8xl mx-auto  h-full flex flex-col ">
         <div className="grid grid-cols-1 flex-1 transition-all duration-300">
           {exibition === 'ilustracao' && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              {projects
-                .filter(
-                  (project: ProjectData) => project.category === 'ilustracao'
-                )
+          {projects
+            .filter(
+              (project: ProjectData) => project.category === 'ilustracao'
+            )
+            .sort((a, b) => {
+              const ao = a.order ?? 9999;
+              const bo = b.order ?? 9999;
+              if (ao !== bo) return ao - bo;
+              return a.title.localeCompare(b.title);
+            })
                 .map((project: ProjectData) => (
                   <Link href={`/work/${project.slug}`} key={project.id}>
                     <div className="group relative block w-full aspect-square overflow-hidden cursor-pointer">
@@ -44,7 +50,7 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
                             {project.title}
                           </h3>
                           <p className="text-gray-200 mt-1">
-                            {project.category}
+                            Ilustração
                           </p>
                         </div>
                       </div>
@@ -55,9 +61,15 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
           )}
 
           {exibition === 'design' && (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
-              {projects
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                  {projects
                 .filter((project: ProjectData) => project.category === 'design')
+                .sort((a, b) => {
+                  const ao = a.order ?? 9999;
+                  const bo = b.order ?? 9999;
+                  if (ao !== bo) return ao - bo;
+                  return a.title.localeCompare(b.title);
+                })
                 .map((project: ProjectData) => (
                   <Link href={`/work/${project.slug}`} key={project.id}>
                     <div className="group relative block w-full aspect-square overflow-hidden cursor-pointer">
@@ -70,13 +82,13 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
                         className="transition-transform duration-500 ease-in-out object-cover"
                       />
 
-                      <div className="absolute inset-0 bg-black bg-opacity-60 flex items-end p-6 opacity-0 group-hover:opacity-60 transition-opacity duration-300">
+                      <div className="absolute inset-0 bg-black bg-opacity-60 flex items-end p-6 opacity-0 group-hover:opacity-60  transition-opacity duration-300">
                         <div>
                           <h3 className="text-white text-xl font-bold">
                             {project.title}
                           </h3>
                           <p className="text-gray-200 mt-1">
-                            {project.category}
+                            Design
                           </p>
                         </div>
                       </div>

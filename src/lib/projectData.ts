@@ -81,6 +81,7 @@ export async function getAllProjects(): Promise<ProjectData[]> {
       date: project.date,
       category: project.category,
       coverImage: project.coverImage,
+      order: project.order,
       published: project.published,
       muralSections: project.muralSections as MuralSection[],
     }));
@@ -105,6 +106,7 @@ export async function getAllProjectsIncludingDrafts(): Promise<ProjectData[]> {
       category: project.category,
       coverImage: project.coverImage,
       published: project.published,
+      order: project.order,
       muralSections: project.muralSections as MuralSection[],
     }));
   } catch (error) {
@@ -124,6 +126,7 @@ export async function saveProject(project: ProjectData): Promise<void> {
         category: project.category,
         coverImage: project.coverImage,
         published: project.published,
+        order: project.order,
         muralSections: project.muralSections as any,
       },
       create: {
@@ -135,6 +138,7 @@ export async function saveProject(project: ProjectData): Promise<void> {
         category: project.category,
         coverImage: project.coverImage,
         published: project.published,
+        order: project.order ?? 0,
         muralSections: project.muralSections as any,
       },
     });
