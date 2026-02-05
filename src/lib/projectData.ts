@@ -116,6 +116,7 @@ export async function getAllProjectsIncludingDrafts(): Promise<ProjectData[]> {
 }
 
 export async function saveProject(project: ProjectData): Promise<void> {
+  const orderValue = project.order !== undefined ? Number(project.order) : 0;
   try {
     await prisma.project.upsert({
       where: { slug: project.slug },
@@ -126,7 +127,7 @@ export async function saveProject(project: ProjectData): Promise<void> {
         category: project.category,
         coverImage: project.coverImage,
         published: project.published,
-        order: project.order,
+        order: orderValue,
         muralSections: project.muralSections as any,
       },
       create: {
@@ -138,7 +139,7 @@ export async function saveProject(project: ProjectData): Promise<void> {
         category: project.category,
         coverImage: project.coverImage,
         published: project.published,
-        order: project.order ?? 0,
+        order: orderValue,
         muralSections: project.muralSections as any,
       },
     });
