@@ -1,5 +1,5 @@
 'use client';
-
+import { convertImageToWebP } from '@/lib/imageUtils';
 import { useState } from 'react';
 import type { ProjectData, MuralSection } from '@/lib/projectData';
 import { uploadImage } from '@/lib/blob';
@@ -18,7 +18,7 @@ export default function ProjectForm({
   const [fileSizes, setFileSizes] = useState<Record<string, number>>({});
   const [formData, setFormData] = useState<ProjectData>(project);
   const [uploading, setUploading] = useState<string | null>(null);
-
+  const [useWebP, setUseWebP] = useState(false);
   const handleInputChange = (field: keyof ProjectData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -39,8 +39,16 @@ export default function ProjectForm({
 
     setUploading('cover');
     try {
+      let fileToUpload = file;
+      if (useWebP) {
+        try {
+          fileToUpload = await convertImageToWebP(file);
+        } catch (err) {
+          console.error("Erro ao converter WebP, usando original", err);
+        }
+      }
       const folder = `projects/${formData.slug || 'temp'}`;
-      const result = await uploadImage(file, folder);
+      const result = await uploadImage(fileToUpload, folder);
       handleInputChange('coverImage', result.url);
     } catch (error) {
       console.error('Erro ao fazer upload:', error);
@@ -132,8 +140,17 @@ export default function ProjectForm({
 
     setUploading(key);
     try {
+      let fileToUpload = file;
+      if (useWebP) {
+        try {
+          fileToUpload = await convertImageToWebP(file);
+          setFileSizes((prev) => ({ ...prev, [key]: fileToUpload.size }));
+        } catch (err) {
+          console.error("Erro ao converter WebP", err);
+        }
+      }
       const folder = `projects/${formData.slug || 'temp'}`;
-      const result = await uploadImage(file, folder);
+      const result = await uploadImage(fileToUpload, folder);
       const section = formData.muralSections[sectionIndex];
 
       if (section.type === 'full') {
@@ -182,6 +199,23 @@ export default function ProjectForm({
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Ordem de exibição (número menor aparece primeiro)
           </label>
+          <div className="flex items-center mb-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
+          <input
+            type="checkbox"
+            id="useWebP"
+            checked={useWebP}
+            onChange={(e) => setUseWebP(e.target.checked)}
+            className="w-4 h-4 text-[var(--secondary)] rounded border-gray-300 focus:ring-[var(--secondary)]"
+          />
+          <div className="ml-3">
+            <label htmlFor="useWebP" className="text-sm font-medium text-gray-700 cursor-pointer">
+              Otimizar imagens (Converter para WebP)
+            </label>
+            <p className="text-xs text-gray-500">
+              Reduz drasticamente o tamanho dos arquivos e acelera o carregamento.
+            </p>
+          </div>
+        </div>
           <input
           type="number"
           value={formData.order ?? 0}
