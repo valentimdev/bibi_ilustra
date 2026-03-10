@@ -196,9 +196,7 @@ export default function ProjectForm({
         <h2 className="text-xl font-semibold">Informações Básicas</h2>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Ordem de exibição (número menor aparece primeiro)
-          </label>
+
           <div className="flex items-center mb-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
           <input
             type="checkbox"
@@ -216,6 +214,9 @@ export default function ProjectForm({
             </p>
           </div>
         </div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Ordem de exibição (número menor aparece primeiro)
+          </label>
           <input
           type="number"
           value={formData.order ?? 0}
