@@ -9,18 +9,23 @@ export default function EditProjectPage() {
   const router = useRouter();
   const params = useParams();
   const slug = params.slug as string;
+  const normalizedSlug = slug.toLowerCase();
   const [project, setProject] = useState<ProjectData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
+    if (slug !== normalizedSlug) {
+      router.replace(`/admin/projects/${normalizedSlug}/edit`);
+      return;
+    }
     loadProject();
-  }, [slug]);
+  }, [slug, normalizedSlug]);
 
   const loadProject = async () => {
     try {
-      const response = await fetch(`/api/admin/projects/${slug}`);
+      const response = await fetch(`/api/admin/projects/${normalizedSlug}`);
       if (response.ok) {
         const data = await response.json();
         setProject(data);
@@ -38,7 +43,7 @@ export default function EditProjectPage() {
   const handleSave = async (updatedProject: ProjectData) => {
     setSaving(true);
     try {
-      const response = await fetch(`/api/admin/projects/${slug}`, {
+      const response = await fetch(`/api/admin/projects/${normalizedSlug}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedProject),
@@ -63,7 +68,7 @@ export default function EditProjectPage() {
 
     setDeleting(true);
     try {
-      const response = await fetch(`/api/admin/projects/${slug}`, {
+      const response = await fetch(`/api/admin/projects/${normalizedSlug}`, {
         method: 'DELETE',
       });
 

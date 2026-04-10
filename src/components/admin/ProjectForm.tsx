@@ -15,12 +15,15 @@ export default function ProjectForm({
   onSave,
   loading,
 }: ProjectFormProps) {
-  const normalizeSlug = (value: string) =>
+  const sanitizeSlugInput = (value: string) =>
     value
       .toLowerCase()
       .trim()
       .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9-]/g, '')
+      .replace(/[^a-z0-9-]/g, '');
+
+  const normalizeSlug = (value: string) =>
+    sanitizeSlugInput(value)
       .replace(/-+/g, '-')
       .replace(/^-|-$/g, '');
 
@@ -259,7 +262,8 @@ export default function ProjectForm({
           <input
             type="text"
             value={formData.slug}
-            onChange={(e) => handleInputChange('slug', normalizeSlug(e.target.value))}
+            onChange={(e) => handleInputChange('slug', sanitizeSlugInput(e.target.value))}
+            onBlur={(e) => handleInputChange('slug', normalizeSlug(e.target.value))}
             className="w-full px-3 py-2 border border-gray-300 rounded-md"
             required
             pattern="[a-z0-9]+(?:-[a-z0-9]+)*"

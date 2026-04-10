@@ -36,12 +36,17 @@ export type ProjectData = {
   muralSections: MuralSection[];
 };
 
+export function normalizeProjectSlug(slug: string): string {
+  return slug.trim().toLowerCase();
+}
+
 export async function getProjectBySlug(
   slug: string
 ): Promise<ProjectData | undefined> {
   try {
+    const normalizedSlug = normalizeProjectSlug(slug);
     const project = await prisma.project.findUnique({
-      where: { slug },
+      where: { slug: normalizedSlug },
     });
 
     if (!project) {
@@ -116,10 +121,11 @@ export async function getAllProjectsIncludingDrafts(): Promise<ProjectData[]> {
 }
 
 export async function saveProject(project: ProjectData): Promise<void> {
+  const normalizedSlug = normalizeProjectSlug(project.slug);
   const orderValue = project.order !== undefined ? Number(project.order) : 0;
   try {
     await prisma.project.upsert({
-      where: { slug: project.slug },
+      where: { slug: normalizedSlug },
       update: {
         title: project.title,
         description: project.description,
@@ -132,7 +138,7 @@ export async function saveProject(project: ProjectData): Promise<void> {
       },
       create: {
         id: project.id || undefined,
-        slug: project.slug,
+        slug: normalizedSlug,
         title: project.title,
         description: project.description,
         date: project.date,
@@ -153,11 +159,13 @@ export async function updateProject(
   currentSlug: string,
   project: ProjectData
 ): Promise<void> {
+  const normalizedCurrentSlug = normalizeProjectSlug(currentSlug);
+  const normalizedSlug = normalizeProjectSlug(project.slug);
   const orderValue = project.order !== undefined ? Number(project.order) : 0;
 
   try {
     const existingProject = await prisma.project.findUnique({
-      where: { slug: currentSlug },
+      where: { slug: normalizedCurrentSlug },
       select: { id: true },
     });
 
@@ -168,7 +176,7 @@ export async function updateProject(
     await prisma.project.update({
       where: { id: existingProject.id },
       data: {
-        slug: project.slug,
+        slug: normalizedSlug,
         title: project.title,
         description: project.description,
         date: project.date,
@@ -187,8 +195,9 @@ export async function updateProject(
 
 export async function deleteProject(slug: string): Promise<boolean> {
   try {
+    const normalizedSlug = normalizeProjectSlug(slug);
     await prisma.project.delete({
-      where: { slug },
+      where: { slug: normalizedSlug },
     });
     return true;
   } catch (error) {

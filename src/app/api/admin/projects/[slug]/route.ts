@@ -4,6 +4,7 @@ import {
   getProjectBySlug,
   updateProject,
   deleteProject,
+  normalizeProjectSlug,
   type ProjectData,
 } from '@/lib/projectData';
 import { revalidatePath } from 'next/cache';
@@ -22,7 +23,8 @@ export async function GET(
 
   try {
     const { slug } = await params;
-    const project = await getProjectBySlug(slug);
+    const normalizedSlug = normalizeProjectSlug(slug);
+    const project = await getProjectBySlug(normalizedSlug);
 
     if (!project) {
       return NextResponse.json(
@@ -53,10 +55,11 @@ export async function PUT(
 
   try {
     const { slug } = await params;
+    const normalizedSlug = normalizeProjectSlug(slug);
     const body = await request.json();
     const project: ProjectData = {
       ...body,
-      slug: String(body.slug ?? '').trim().toLowerCase(),
+      slug: normalizeProjectSlug(String(body.slug ?? '')),
     };
 
     if (!project.slug || !SLUG_REGEX.test(project.slug)) {
@@ -66,10 +69,10 @@ export async function PUT(
       );
     }
 
-    await updateProject(slug, project);
+    await updateProject(normalizedSlug, project);
 
     revalidatePath('/');
-    revalidatePath(`/work/${slug}`);
+    revalidatePath(`/work/${normalizedSlug}`);
     revalidatePath(`/work/${project.slug}`);
 
     return NextResponse.json({ success: true, project });
@@ -94,7 +97,8 @@ export async function DELETE(
 
   try {
     const { slug } = await params;
-    const deleted = await deleteProject(slug);
+    const normalizedSlug = normalizeProjectSlug(slug);
+    const deleted = await deleteProject(normalizedSlug);
 
     if (!deleted) {
       return NextResponse.json(
@@ -104,7 +108,7 @@ export async function DELETE(
     }
 
     revalidatePath('/', 'page');
-    revalidatePath(`/work/${slug}`, 'page');
+    revalidatePath(`/work/${normalizedSlug}`, 'page');
 
     return NextResponse.json({ success: true });
   } catch (error) {

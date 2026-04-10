@@ -1,9 +1,9 @@
 // src/app/work/[slug]/page.tsx
 
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { draftMode } from 'next/headers';
-import { getProjectBySlug } from '@/lib/projectData';
+import { getProjectBySlug, normalizeProjectSlug } from '@/lib/projectData';
 import Link from 'next/link';
 
 type ProjectPageProps = {
@@ -15,8 +15,13 @@ type ProjectPageProps = {
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { isEnabled } = await draftMode();
   const { slug } = await params;
+  const normalizedSlug = normalizeProjectSlug(slug);
 
-  const project = await getProjectBySlug(slug);
+  if (slug !== normalizedSlug) {
+    redirect(`/work/${normalizedSlug}`);
+  }
+
+  const project = await getProjectBySlug(normalizedSlug);
 
   if (!project || (!project.published && !isEnabled)) {
     notFound();
