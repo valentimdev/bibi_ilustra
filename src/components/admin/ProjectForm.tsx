@@ -15,6 +15,15 @@ export default function ProjectForm({
   onSave,
   loading,
 }: ProjectFormProps) {
+  const normalizeSlug = (value: string) =>
+    value
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+
   const [fileSizes, setFileSizes] = useState<Record<string, number>>({});
   const [formData, setFormData] = useState<ProjectData>(project);
   const [uploading, setUploading] = useState<string | null>(null);
@@ -183,6 +192,10 @@ export default function ProjectForm({
       alert('Preencha pelo menos o slug e o título');
       return;
     }
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(formData.slug)) {
+      alert('Slug inválido. Use apenas letras minúsculas, números e hífens.');
+      return;
+    }
     onSave(formData);
   };
 
@@ -218,9 +231,13 @@ export default function ProjectForm({
             Ordem de exibição (número menor aparece primeiro)
           </label>
           <input
-          type="number"
-          value={formData.order ?? 0}
-          onChange={(e) => handleInputChange('order', e.target.value)}
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          value={String(formData.order ?? 0)}
+          onChange={(e) =>
+            handleInputChange('order', e.target.value.replace(/\D/g, ''))
+          }
           className="w-full px-3 py-2 border border-gray-300 rounded-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
            />
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -242,10 +259,10 @@ export default function ProjectForm({
           <input
             type="text"
             value={formData.slug}
-            onChange={(e) => handleInputChange('slug', e.target.value)}
+            onChange={(e) => handleInputChange('slug', normalizeSlug(e.target.value))}
             className="w-full px-3 py-2 border border-gray-300 rounded-md"
             required
-            pattern="[a-z0-9-]+"
+            pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
             title="Apenas letras minúsculas, números e hífens"
           />
         </div>

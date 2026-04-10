@@ -149,6 +149,42 @@ export async function saveProject(project: ProjectData): Promise<void> {
   }
 }
 
+export async function updateProject(
+  currentSlug: string,
+  project: ProjectData
+): Promise<void> {
+  const orderValue = project.order !== undefined ? Number(project.order) : 0;
+
+  try {
+    const existingProject = await prisma.project.findUnique({
+      where: { slug: currentSlug },
+      select: { id: true },
+    });
+
+    if (!existingProject) {
+      throw new Error('Projeto não encontrado');
+    }
+
+    await prisma.project.update({
+      where: { id: existingProject.id },
+      data: {
+        slug: project.slug,
+        title: project.title,
+        description: project.description,
+        date: project.date,
+        category: project.category,
+        coverImage: project.coverImage,
+        published: project.published,
+        order: orderValue,
+        muralSections: project.muralSections as any,
+      },
+    });
+  } catch (error) {
+    console.error('Erro ao atualizar projeto:', error);
+    throw error;
+  }
+}
+
 export async function deleteProject(slug: string): Promise<boolean> {
   try {
     await prisma.project.delete({

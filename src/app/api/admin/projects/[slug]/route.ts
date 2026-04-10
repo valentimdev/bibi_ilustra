@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth';
 import {
   getProjectBySlug,
-  saveProject,
+  updateProject,
   deleteProject,
   type ProjectData,
 } from '@/lib/projectData';
 import { revalidatePath } from 'next/cache';
+
+const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export async function GET(
   request: NextRequest,
@@ -52,26 +54,29 @@ export async function PUT(
   try {
     const { slug } = await params;
     const body = await request.json();
-    const project: ProjectData = body;
+    const project: ProjectData = {
+      ...body,
+      slug: String(body.slug ?? '').trim().toLowerCase(),
+    };
 
-    // Validar que o slug do projeto corresponde
-    if (project.slug !== slug) {
+    if (!project.slug || !SLUG_REGEX.test(project.slug)) {
       return NextResponse.json(
-        { error: 'Slug do projeto não corresponde' },
+        { error: 'Slug inválido. Use apenas letras minúsculas, números e hífens.' },
         { status: 400 }
       );
     }
 
-    await saveProject(project);
+    await updateProject(slug, project);
 
     revalidatePath('/');
     revalidatePath(`/work/${slug}`);
+    revalidatePath(`/work/${project.slug}`);
 
     return NextResponse.json({ success: true, project });
   } catch (error) {
     console.error('Erro ao salvar projeto:', error);
     return NextResponse.json(
-      { error: 'Erro ao salvar projeto' },
+      { error: error instanceof Error ? error.message : 'Erro ao salvar projeto' },
       { status: 500 }
     );
   }
