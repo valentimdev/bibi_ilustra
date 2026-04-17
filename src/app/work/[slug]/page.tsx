@@ -38,9 +38,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   return (
     <section className="w-full pt-10 pb-10 ">
 
-      <header className="text-center px-4 py-6 mx-auto">
-        <div className="grid grid-cols-3 items-center ">
-          <div className="flex justify-start ">
+      <header className="text-center  py-4 mx-auto">
+        <div className=" flex items-center   justify-center relative  ">
+          <div className="absolute left-0">
             <Link href="/">
               <button className="cursor-pointer">
                 <Image
@@ -61,21 +61,20 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </h1>
           </div>
           
-          <div></div>
         </div>
       
-        <p className="mt-2 text-lg text-gray-500">{project.date}</p>
-        <p className="mt-2 text-xl text-left text-gray-800 mx-auto whitespace-pre-wrap">
+        <p className="mt-2 text-lg text-gray-500  ">{project.date}</p>
+        <p className="mt-2 text-xl text-center text-gray-800 mx-auto whitespace-pre-wrap">
           {project.description}
         </p>
       </header>
 
-      <div className="space-y-1 md:space-y-1 mb-10">
+      <div className="space-y-1 md:space-y-1 mb-10 ">
         {project.muralSections.map((section, index) => (
           <div key={index}>
             {section.type === 'full' && (
-              <div className="w-full flex justify-center">
-                <div className="w-full max-w-[1400px] relative">
+              <div className="w-full flex justify-center ">
+                <div className="w-full ">
                   {isVideo(section.imageUrl) ? (
                     <video
                       src={section.imageUrl}
@@ -144,7 +143,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               </div>
             )}
             {section.type === 'text' && (
-              <div className=" px-3 py-8 md:py-8  ">
+              <div className=" px-3 py-8 md:py-8   ">
                 <p className="text-gray-800 text-xl leading-relaxed whitespace-pre-wrap ">
                   {section.content}
                 </p>
