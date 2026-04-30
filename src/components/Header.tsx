@@ -56,7 +56,7 @@ function Header() {
         backgroundRepeat: 'no-repeat',
       }}
     >
-      <nav className="max-w-8xl mx-10 grid grid-cols-[1fr_auto_1fr] items-center h-30 px-4 sm:px-6 lg:px-8">
+      <nav className="max-w-8xl mx-4 grid grid-cols-[56px_auto_56px] items-center h-30 px-2 sm:mx-10 sm:grid-cols-[1fr_auto_1fr] sm:px-6 lg:px-8">
         <div className="hidden md:flex flex-row justify-start items-center gap-3">
           <Link href="/">
             <p
@@ -133,7 +133,7 @@ function Header() {
               width={350}
               height={70}
               unoptimized={true}
-              className=" w-60 md:w-[350px]  h-auto"
+              className="w-52 md:w-[350px] h-auto"
             />
           </Link>
         </div>

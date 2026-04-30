@@ -143,7 +143,7 @@ export default function ProjectMural({ sections }: ProjectMuralProps) {
           <div key={index}>
             {section.type === 'full' && (
               <div className="w-full flex justify-center border items-center border-amber-950">
-                <div className="w-full flex justify-center border items-center px-20">
+                <div className="w-full flex justify-center border items-center px-0 sm:px-20">
                   {isVideo(section.imageUrl) ? (
                     <ClickableVideo
                       src={section.imageUrl}

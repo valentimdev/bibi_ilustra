@@ -4,8 +4,8 @@ import React from 'react';
 export default function About() {
   return (
     <div className="flex flex-col w-full min-h-screen py-8 gap-16">
-      <div className="flex flex-row gap-8 px-8 py-8 max-w-7xl mx-auto w-full ">
-      <div className="relative w-[48%] flex-shrink-0 min-h-[600px] border">
+      <div className="flex flex-col gap-8 px-5 py-8 max-w-7xl mx-auto w-full md:flex-row md:px-8">
+      <div className="relative w-full flex-shrink-0 min-h-[340px] border md:w-[48%] md:min-h-[600px]">
           <Image
            unoptimized
             src="/images/bibi_foto.png"
@@ -17,12 +17,12 @@ export default function About() {
         
 
         <div className="flex-1 flex flex-col justify-center">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6 leading-tight">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-5 md:mb-6 leading-tight text-center md:text-left">
             Hi, I'm{' '}
             <span className="text-[var(--primary)]">Bianca Tavares</span>!
           </h2>
 
-          <p className="font-semibold text-lg leading-relaxed mb-6 text-gray-800">
+          <p className="font-semibold text-base md:text-lg leading-relaxed mb-5 md:mb-6 text-gray-800 text-left">
             Blending{' '}
             <span className="text-[var(--secondary)]">illustration</span> and{' '}
             <span className="text-[var(--secondary)]">design</span> in the
@@ -30,7 +30,7 @@ export default function About() {
             editorial, gaming, branding, and audiovisual content.
           </p>
 
-          <p className="text-gray-700 leading-relaxed mb-6">
+          <p className="text-gray-700 text-sm md:text-base leading-relaxed mb-5 md:mb-6 text-left">
             I've delivered didactic illustrations, from children's materials to
             complex scientific university content, alongside developing the
             covers and graphic projects for those segments. My expertise also
@@ -39,13 +39,13 @@ export default function About() {
             editing.
           </p>
 
-          <p className="text-gray-700 leading-relaxed mb-8">
+          <p className="text-gray-700 text-sm md:text-base leading-relaxed mb-6 md:mb-8 text-left">
             My passion is translating complex ideas into engaging and
             strategically sound visual projects, always preserving the unique
             authenticity and spark of each creation.
           </p>
 
-          <p className="text-[#EC2677] text-2xl font-bold">Let's create?</p>
+          <p className="text-[#EC2677] text-xl md:text-2xl font-bold text-center md:text-left">Let's create?</p>
         </div>
       </div>
 

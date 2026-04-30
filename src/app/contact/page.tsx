@@ -114,11 +114,11 @@ const validateField = (name: string, value: string): string => {
     }
   };
   return (
-    <div className="overflow-hidden flex flex-col w-full  justify-center  items-center pt-20 pb-30 px-5  min-h-[calc(100vh-180px)]">
-      <div className=" flex flex-col w-full   ">
+    <div className="overflow-hidden flex flex-col w-full justify-center items-center pt-12 pb-20 px-5 min-h-[calc(100vh-180px)] md:pt-20 md:pb-30">
+      <div className="flex flex-col w-full">
         </div>
-        <div className="flex flex-row w-full gap-8">
-        <div className=" w-1/2 pt-3 flex flex-col items-center justify-center">
+        <div className="flex flex-col w-full max-w-6xl gap-10 md:flex-row md:gap-8">
+        <div className="w-full pt-0 flex flex-col items-center justify-center md:w-1/2 md:pt-3">
         <h1 className="text-lg text-center text-gray-500 leading-tight">
           Have any ideas you'd like to share?
           </h1>
@@ -136,10 +136,10 @@ const validateField = (name: string, value: string): string => {
               loop
               playsInline
               controls={false}
-              className="w-full h-auto mt-0 "
+              className="w-full max-w-md h-auto mt-0"
             />
         </div>
-        <div className="w-1/2  flex flex-col">
+        <div className="w-full flex flex-col md:w-1/2">
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full ">
             
@@ -208,8 +208,8 @@ const validateField = (name: string, value: string): string => {
                 <p className="text-center text-red-600 text-xs mt-1">{errors.message}</p>
               )}
             </div>
-            <div className="flex justify-between items-center gap-3 mt-2">
-              <div className="flex-1">
+            <div className="mt-2 flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-3">
+              <div className="order-2 flex-1 md:order-1">
                   {status.type && (
                     <p className={`text-sm font-medium ${
                       status.type === 'success' 
@@ -224,7 +224,7 @@ const validateField = (name: string, value: string): string => {
               <button 
                 type="submit" 
                 disabled={isLoading}
-                className={`cursor-pointer w-auto px-8 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-2xl font-bold transition-all ${
+                className={`order-1 cursor-pointer w-full px-8 py-3 text-lg bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-2xl font-bold transition-all md:order-2 md:w-auto md:py-2 md:text-base ${
                   isLoading ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
