@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import type { ProjectData } from '@/lib/projectData';
+import ArtworkImage from './ArtworkImage';
 
 type ArtGalleryProps = {
   projects: ProjectData[];
@@ -21,7 +21,7 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
       <div className="max-w-8xl mx-auto  h-full flex flex-col ">
         <div className="grid grid-cols-1 flex-1 transition-all duration-300">
           {exibition === 'ilustracao' && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
           {projects
             .filter(
               (project: ProjectData) => project.category === 'ilustracao'
@@ -35,13 +35,14 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
                 .map((project: ProjectData) => (
                   <Link href={`/work/${project.slug}`} key={project.id}>
                     <div className="group relative block w-full aspect-square overflow-hidden cursor-pointer">
-                      <Image
-                      unoptimized
+                      <ArtworkImage
+                        unoptimized
                         src={project.coverImage}
                         alt={project.title}
                         fill
                         sizes="(max-width: 1024px) 50vw, 25vw"
-                        className="transition-transform duration-500 ease-in-out object-cover"
+                        className="object-cover"
+                        placeholderClassName="bg-[var(--accent)]/30"
                       />
 
                       <div className="absolute inset-0 bg-black bg-opacity-60 flex items-end p-6 opacity-0 group-hover:opacity-60 transition-opacity duration-300">
@@ -73,13 +74,14 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
                 .map((project: ProjectData) => (
                   <Link href={`/work/${project.slug}`} key={project.id}>
                     <div className="group relative block w-full aspect-square overflow-hidden cursor-pointer">
-                      <Image
-                      unoptimized
+                      <ArtworkImage
+                        unoptimized
                         src={project.coverImage}
                         alt={project.title}
                         fill
                         sizes="(max-width: 1024px) 50vw, 25vw"
-                        className="transition-transform duration-500 ease-in-out object-cover"
+                        className="object-cover"
+                        placeholderClassName="bg-[var(--accent)]/30"
                       />
 
                       <div className="absolute inset-0 bg-black bg-opacity-60 flex items-end p-6 opacity-0 group-hover:opacity-60  transition-opacity duration-300">

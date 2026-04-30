@@ -45,3 +45,26 @@ body {
 .animate-fade-in {
   animation: fadeIn 0.5s ease-in-out;
 }
+
+@keyframes artworkShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.artwork-placeholder {
+  background:
+    linear-gradient(
+      110deg,
+      rgba(255, 255, 255, 0.14) 8%,
+      rgba(255, 255, 255, 0.38) 18%,
+      rgba(255, 255, 255, 0.14) 33%
+    ),
+    linear-gradient(135deg, rgba(18, 72, 127, 0.18), rgba(236, 38, 119, 0.18));
+  background-size: 200% 100%, 100% 100%;
+  animation: artworkShimmer 1.4s linear infinite;
+  transition: opacity 0.35s ease-out;
+}

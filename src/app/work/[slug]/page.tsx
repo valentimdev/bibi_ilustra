@@ -5,6 +5,7 @@ import { notFound, redirect } from 'next/navigation';
 import { draftMode } from 'next/headers';
 import { getProjectBySlug, normalizeProjectSlug } from '@/lib/projectData';
 import Link from 'next/link';
+import ArtworkImage from '@/components/ArtworkImage';
 
 type ProjectPageProps = {
   params: Promise<{
@@ -59,9 +60,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900">
               {project.title}
             </h1>
-            <p className="mt-2 text-lg text-gray-500  ">{project.date}</p>
           </div>
         </div>
+            <p className="mt-2 text-lg text-gray-500  ">{project.date}</p>
           
       
         
@@ -88,13 +89,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                       muted
                     />
                   ) : (
-                    <Image
+                    <ArtworkImage
                       unoptimized
                       src={section.imageUrl}
                       alt={section.alt}
                       width={1400}
                       height={0}
                       sizes="(max-width: 1400px) 100vw, 1400px"
+                      loadingVariant="blur-only"
                       className="w-full h-auto cursor-zoom-in"
                       style={{ height: 'auto' }}
                     />
@@ -105,22 +107,24 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {section.type === 'split' && (
               <div className="flex flex-col md:flex-row gap-1 md:gap-1">
                 <div className="w-full md:w-1/2 aspect-[3/4] relative overflow-hidden ">
-                  <Image
-                  unoptimized
+                  <ArtworkImage
+                    unoptimized
                     src={section.imagesUrl[0]}
                     alt={section.alts[0]}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
+                    loadingVariant="blur-only"
                     className="object-cover"
                   />
                 </div>
                 <div className="w-full md:w-1/2 aspect-[3/4] relative overflow-hidden">
-                  <Image
-                  unoptimized
+                  <ArtworkImage
+                    unoptimized
                     src={section.imagesUrl[1]}
                     alt={section.alts[1]}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
+                    loadingVariant="blur-only"
                     className="object-cover"
                   />
                 </div>
@@ -133,12 +137,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     key={i}
                     className="w-full aspect-square relative overflow-hidden "
                   >
-                    <Image
-                    unoptimized
+                    <ArtworkImage
+                      unoptimized
                       src={imageUrl}
                       alt={section.alts[i]}
                       fill
                       sizes="(max-width: 768px) 100vw, 33vw"
+                      loadingVariant="blur-only"
                       className="object-cover"
                     />
                   </div>
