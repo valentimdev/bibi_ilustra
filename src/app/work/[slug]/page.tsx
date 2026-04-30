@@ -29,7 +29,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   return (
-    <section className="w-full px-4 pt-8 pb-10 sm:px-6 md:px-0">
+    <section className="border border-amber-500 w-full px-0 pt-8 pb-10 sm:px-0 md:px-0">
 
       <header className="text-center py-4 mx-auto border border-purple-700">
         <div className="flex items-center justify-center relative border border-red-600">
@@ -59,7 +59,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       
         
         <div className="flex border-yellow-500 px-0 pt-3 md:px-20">
-        <p className="mx-auto max-w-none text-left text-base leading-7 text-gray-800 md:mt-2 md:text-xl md:text-justify">
+        <p className="mx-auto max-w-none text-center text-base leading-7 text-gray-800 md:mt-2 md:text-xl md:text-justify">
           {project.description}
         </p>
         </div>
