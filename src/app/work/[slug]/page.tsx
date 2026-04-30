@@ -5,7 +5,7 @@ import { notFound, redirect } from 'next/navigation';
 import { draftMode } from 'next/headers';
 import { getProjectBySlug, normalizeProjectSlug } from '@/lib/projectData';
 import Link from 'next/link';
-import ArtworkImage from '@/components/ArtworkImage';
+import ProjectMural from '@/components/ProjectMural';
 
 type ProjectPageProps = {
   params: Promise<{
@@ -27,14 +27,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   if (!project || (!project.published && !isEnabled)) {
     notFound();
   }
-
-  const isVideo = (url: string) => {
-    return (
-      url.toLowerCase().endsWith('.mp4') ||
-      url.toLowerCase().endsWith('.webm') ||
-      url.toLowerCase().endsWith('.mov')
-    );
-  };
 
   return (
     <section className="w-full pt-10 pb-10 ">
@@ -73,93 +65,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </div>
       </header>
 
-      <div className="space-y-1 md:space-y-1 mb-10 ">
-        {project.muralSections.map((section, index) => (
-          <div key={index}>
-            {section.type === 'full' && (
-              <div className="w-full flex justify-center border items-center border-amber-950">
-                <div className="w-full flex justify-center border items-center px-20">
-                  {isVideo(section.imageUrl) ? (
-                    <video
-                      src={section.imageUrl}
-                      className="w-full h-auto cursor-zoom-in"
-                      loop
-                      playsInline
-                      autoPlay
-                      muted
-                    />
-                  ) : (
-                    <ArtworkImage
-                      unoptimized
-                      src={section.imageUrl}
-                      alt={section.alt}
-                      width={1400}
-                      height={0}
-                      sizes="(max-width: 1400px) 100vw, 1400px"
-                      loadingVariant="blur-only"
-                      className="w-full h-auto cursor-zoom-in"
-                      style={{ height: 'auto' }}
-                    />
-                  )}
-                </div>
-              </div>
-            )}
-            {section.type === 'split' && (
-              <div className="flex flex-col md:flex-row gap-1 md:gap-1">
-                <div className="w-full md:w-1/2 aspect-[3/4] relative overflow-hidden ">
-                  <ArtworkImage
-                    unoptimized
-                    src={section.imagesUrl[0]}
-                    alt={section.alts[0]}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    loadingVariant="blur-only"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="w-full md:w-1/2 aspect-[3/4] relative overflow-hidden">
-                  <ArtworkImage
-                    unoptimized
-                    src={section.imagesUrl[1]}
-                    alt={section.alts[1]}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    loadingVariant="blur-only"
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-            )}
-            {section.type === 'trio' && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-1">
-                {section.imagesUrl.map((imageUrl, i) => (
-                  <div
-                    key={i}
-                    className="w-full aspect-square relative overflow-hidden "
-                  >
-                    <ArtworkImage
-                      unoptimized
-                      src={imageUrl}
-                      alt={section.alts[i]}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      loadingVariant="blur-only"
-                      className="object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-            {section.type === 'text' && (
-              <div className=" px-3 py-8 md:py-8   ">
-                <p className="text-gray-800 text-xl leading-relaxed whitespace-pre-wrap ">
-                  {section.content}
-                </p>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+      <ProjectMural sections={project.muralSections} />
     </section>
   );
 }
