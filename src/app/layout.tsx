@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import AppShell from '@/components/AppShell';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: 'Bibi Ilustra',
@@ -21,6 +22,7 @@ export default async function RootLayout({
     <html lang="en" className="h-full">
       <body className="antialiased h-full w-full flex flex-col">
         <AppShell>{children}</AppShell>
+        <Analytics />
       </body>
     </html>
   );
