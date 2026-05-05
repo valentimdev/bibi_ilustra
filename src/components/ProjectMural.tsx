@@ -138,12 +138,12 @@ export default function ProjectMural({ sections }: ProjectMuralProps) {
 
   return (
     <>
-      <div className="space-y-1 md:space-y-1 mb-10 ">
+      <div className="space-y-1  mb-10 ">
         {sections.map((section, index) => (
           <div key={index}>
             {section.type === 'full' && (
               <div className="w-full flex justify-center border items-center border-amber-950">
-                <div className="w-full flex justify-center border items-center px-0 sm:px-20">
+                <div className={`w-full flex justify-center border items-center px-0 ${isVideo(section.imageUrl) ? 'px-20' : ''}`}>
                   {isVideo(section.imageUrl) ? (
                     <ClickableVideo
                       src={section.imageUrl}
