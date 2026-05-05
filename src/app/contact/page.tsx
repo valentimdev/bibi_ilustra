@@ -115,9 +115,9 @@ const validateField = (name: string, value: string): string => {
   };
   return (
     <div className="overflow-hidden flex flex-col w-full justify-center items-center pt-12 pb-20 px-5 min-h-[calc(100vh-180px)] md:pt-20 md:pb-30">
-      <div className="flex flex-col w-full">
-        </div>
-        <div className="flex flex-col w-full max-w-6xl gap-10 md:flex-row md:gap-8">
+      
+
+        <div className="flex flex-col w-full max-w-6xl gap-10 md:flex-row md:gap-15">
         <div className="w-full pt-0 flex flex-col items-center justify-center md:w-1/2 md:pt-3">
         <h1 className="text-lg text-center text-gray-500 leading-tight">
           Have any ideas you'd like to share?
@@ -136,7 +136,7 @@ const validateField = (name: string, value: string): string => {
               loop
               playsInline
               controls={false}
-              className="w-full max-w-md h-auto mt-0"
+              className="w-full  mt-0"
             />
         </div>
         <div className="w-full flex flex-col md:w-1/2">
