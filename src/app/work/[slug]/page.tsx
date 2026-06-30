@@ -29,10 +29,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   return (
-    <section className="border border-amber-500 w-full px-0 pt-8 pb-10 sm:px-0 md:px-0">
+    <section className=" w-full px-0 pt-8 pb-10 sm:px-0 md:px-0">
 
-      <header className="text-center py-4 mx-auto border border-purple-700">
-        <div className="flex items-center justify-center relative border border-red-600">
+      <header className="text-center py-4 mx-auto ">
+        <div className="flex items-center justify-center relative ">
           <div className="absolute left-0 hidden md:block">
             <Link href="/">
               <button className="cursor-pointer">
@@ -48,7 +48,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
           
       
-          <div className="flex flex-col justify-center border border-amber-400">
+          <div className="flex flex-col justify-center ">
             <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-gray-900">
               {project.title}
             </h1>
@@ -58,7 +58,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           
       
         
-        <div className="flex border-yellow-500 px-0 pt-3 md:px-20">
+        <div className="flex px-0 pt-3 md:px-20">
         <p className="mx-auto max-w-none text-center text-base leading-7 text-gray-800 md:mt-2 md:text-xl md:text-justify">
           {project.description}
         </p>
