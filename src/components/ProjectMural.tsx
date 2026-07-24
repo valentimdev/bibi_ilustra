@@ -2,7 +2,10 @@
 
 import React from 'react';
 import Image from 'next/image';
-import ArtworkImage from '@/components/ArtworkImage';
+import ArtworkImage, {
+  hasLoadedMedia,
+  markMediaAsLoaded,
+} from '@/components/ArtworkImage';
 import type { MuralSection } from '@/lib/projectData';
 
 type ProjectMuralProps = {
@@ -90,6 +93,7 @@ function ClickableVideo({
         playsInline
         autoPlay
         muted
+        onLoadedData={() => markMediaAsLoaded(src)}
       />
     </button>
   );
@@ -142,8 +146,8 @@ export default function ProjectMural({ sections }: ProjectMuralProps) {
         {sections.map((section, index) => (
           <div key={index}>
             {section.type === 'full' && (
-              <div className="w-full flex justify-center border items-center border-amber-950">
-                <div className={`w-full flex justify-center border items-center px-0 ${isVideo(section.imageUrl) ? 'px-20' : ''}`}>
+              <div className="w-full flex justify-center  items-center ">
+                <div className={`w-full flex justify-center  items-center px-0 ${isVideo(section.imageUrl) ? 'px-20' : ''}`}>
                   {isVideo(section.imageUrl) ? (
                     <ClickableVideo
                       src={section.imageUrl}
@@ -265,20 +269,26 @@ export default function ProjectMural({ sections }: ProjectMuralProps) {
                   height={1800}
                   sizes="100vw"
                   className={[
-                    'max-h-full max-w-full object-contain animate-fade-in transition-transform duration-300 ease-out',
+                    'max-h-full max-w-full object-contain transition-transform duration-300 ease-out',
+                    hasLoadedMedia(lightboxMedia.src) ? '' : 'animate-fade-in',
                     isZoomed ? 'scale-[1.9]' : 'scale-100',
                   ].join(' ')}
+                  onLoad={() => markMediaAsLoaded(lightboxMedia.src)}
                 />
               </button>
             ) : (
               <video
                 src={lightboxMedia.src}
-                className="max-h-full max-w-full object-contain animate-fade-in"
+                className={[
+                  'max-h-full max-w-full object-contain',
+                  hasLoadedMedia(lightboxMedia.src) ? '' : 'animate-fade-in',
+                ].join(' ')}
                 loop
                 playsInline
                 autoPlay
                 muted
                 tabIndex={-1}
+                onLoadedData={() => markMediaAsLoaded(lightboxMedia.src)}
                 onKeyDown={(event) => {
                   if (event.key === ' ') {
                     event.preventDefault();
