@@ -132,9 +132,11 @@ function LightboxArtworkImage({
       height={1800}
       sizes="100vw"
       className={[
-        'max-h-full max-w-full object-contain transition-transform duration-300 ease-out',
+        'h-auto w-auto object-contain transition-[width,max-width,max-height] duration-300 ease-out',
+        isZoomed
+          ? 'max-h-none max-w-none w-[190vw] md:w-[150vw]'
+          : 'max-h-[96vh] max-w-[96vw]',
         shouldFadeIn ? 'animate-fade-in' : '',
-        isZoomed ? 'scale-[1.9]' : 'scale-100',
       ]
         .filter(Boolean)
         .join(' ')}
@@ -165,7 +167,7 @@ function LightboxVideo({ media }: { media: LightboxMedia }) {
       ref={videoRef}
       src={media.src}
       className={[
-        'max-h-full max-w-full object-contain',
+        'h-auto w-auto max-h-[96vh] max-w-[96vw] object-contain',
         shouldFadeIn ? 'animate-fade-in' : '',
       ]
         .filter(Boolean)
@@ -175,6 +177,7 @@ function LightboxVideo({ media }: { media: LightboxMedia }) {
       autoPlay
       muted
       tabIndex={-1}
+      onClick={(event) => event.stopPropagation()}
       onLoadedData={() => markMediaAsLoaded(media.src)}
       onKeyDown={(event) => {
         if (event.key === ' ') {
@@ -314,12 +317,12 @@ export default function ProjectMural({ sections }: ProjectMuralProps) {
 
       {lightboxMedia && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-2 md:p-4"
+          className="fixed inset-0 z-[100] overflow-auto bg-black/90"
           onClick={closeLightbox}
         >
           <button
             type="button"
-            className="absolute right-4 top-3 z-[101] text-5xl leading-none text-[var(--primary)] cursor-pointer"
+            className="fixed right-4 top-3 z-[101] text-5xl leading-none text-[var(--primary)] cursor-pointer"
             onClick={closeLightbox}
             aria-label="Fechar imagem ampliada"
           >
@@ -327,19 +330,28 @@ export default function ProjectMural({ sections }: ProjectMuralProps) {
           </button>
 
           <div
-            className="relative flex h-[96vh] w-[96vw] items-center justify-center"
-            onClick={(event) => event.stopPropagation()}
+            className={[
+              'relative flex min-h-screen min-w-full p-2 md:p-4',
+              isZoomed
+                ? 'items-start justify-center'
+                : 'items-center justify-center',
+            ]
+              .filter(Boolean)
+              .join(' ')}
           >
             {lightboxMedia.type === 'image' ? (
               <button
                 type="button"
                 className={[
-                  'flex h-full w-full items-center justify-center cursor-zoom-in overflow-auto focus:outline-none focus:ring-0',
+                  'inline-flex items-center justify-center cursor-zoom-in focus:outline-none focus:ring-0',
                   isZoomed ? 'cursor-zoom-out' : '',
                 ]
                   .filter(Boolean)
                   .join(' ')}
-                onClick={() => setIsZoomed((current) => !current)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIsZoomed((current) => !current);
+                }}
                 onKeyDown={(event) => {
                   if (event.key === ' ' || event.key === 'Enter') {
                     event.preventDefault();
