@@ -99,6 +99,92 @@ function ClickableVideo({
   );
 }
 
+function LightboxArtworkImage({
+  media,
+  isZoomed,
+}: {
+  media: LightboxMedia;
+  isZoomed: boolean;
+}) {
+  const imageRef = React.useRef<HTMLImageElement | null>(null);
+  const [shouldFadeIn, setShouldFadeIn] = React.useState(
+    () => !hasLoadedMedia(media.src)
+  );
+
+  React.useLayoutEffect(() => {
+    const image = imageRef.current;
+
+    if (hasLoadedMedia(media.src) || (image?.complete && image.naturalWidth > 0)) {
+      markMediaAsLoaded(media.src);
+      setShouldFadeIn(false);
+    } else {
+      setShouldFadeIn(true);
+    }
+  }, [media.src]);
+
+  return (
+    <Image
+      unoptimized
+      ref={imageRef}
+      src={media.src}
+      alt={media.alt}
+      width={1800}
+      height={1800}
+      sizes="100vw"
+      className={[
+        'max-h-full max-w-full object-contain transition-transform duration-300 ease-out',
+        shouldFadeIn ? 'animate-fade-in' : '',
+        isZoomed ? 'scale-[1.9]' : 'scale-100',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      onLoad={() => markMediaAsLoaded(media.src)}
+    />
+  );
+}
+
+function LightboxVideo({ media }: { media: LightboxMedia }) {
+  const videoRef = React.useRef<HTMLVideoElement | null>(null);
+  const [shouldFadeIn, setShouldFadeIn] = React.useState(
+    () => !hasLoadedMedia(media.src)
+  );
+
+  React.useLayoutEffect(() => {
+    const video = videoRef.current;
+
+    if (hasLoadedMedia(media.src) || (video && video.readyState >= 2)) {
+      markMediaAsLoaded(media.src);
+      setShouldFadeIn(false);
+    } else {
+      setShouldFadeIn(true);
+    }
+  }, [media.src]);
+
+  return (
+    <video
+      ref={videoRef}
+      src={media.src}
+      className={[
+        'max-h-full max-w-full object-contain',
+        shouldFadeIn ? 'animate-fade-in' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      loop
+      playsInline
+      autoPlay
+      muted
+      tabIndex={-1}
+      onLoadedData={() => markMediaAsLoaded(media.src)}
+      onKeyDown={(event) => {
+        if (event.key === ' ') {
+          event.preventDefault();
+        }
+      }}
+    />
+  );
+}
+
 export default function ProjectMural({ sections }: ProjectMuralProps) {
   const [lightboxMedia, setLightboxMedia] = React.useState<LightboxMedia | null>(
     null
@@ -261,40 +347,13 @@ export default function ProjectMural({ sections }: ProjectMuralProps) {
                 }}
                 aria-label={isZoomed ? 'Reduzir zoom da imagem' : 'Aumentar zoom da imagem'}
               >
-                <Image
-                  unoptimized
-                  src={lightboxMedia.src}
-                  alt={lightboxMedia.alt}
-                  width={1800}
-                  height={1800}
-                  sizes="100vw"
-                  className={[
-                    'max-h-full max-w-full object-contain transition-transform duration-300 ease-out',
-                    hasLoadedMedia(lightboxMedia.src) ? '' : 'animate-fade-in',
-                    isZoomed ? 'scale-[1.9]' : 'scale-100',
-                  ].join(' ')}
-                  onLoad={() => markMediaAsLoaded(lightboxMedia.src)}
+                <LightboxArtworkImage
+                  media={lightboxMedia}
+                  isZoomed={isZoomed}
                 />
               </button>
             ) : (
-              <video
-                src={lightboxMedia.src}
-                className={[
-                  'max-h-full max-w-full object-contain',
-                  hasLoadedMedia(lightboxMedia.src) ? '' : 'animate-fade-in',
-                ].join(' ')}
-                loop
-                playsInline
-                autoPlay
-                muted
-                tabIndex={-1}
-                onLoadedData={() => markMediaAsLoaded(lightboxMedia.src)}
-                onKeyDown={(event) => {
-                  if (event.key === ' ') {
-                    event.preventDefault();
-                  }
-                }}
-              />
+              <LightboxVideo media={lightboxMedia} />
             )}
           </div>
         </div>
