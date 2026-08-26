@@ -8,24 +8,50 @@ type ArtworkImageProps = ImageProps & {
   placeholderClassName?: string;
 };
 
+const loadedMediaSources = new Set<string>();
+
+export function hasLoadedMedia(src: string) {
+  return loadedMediaSources.has(src);
+}
+
+export function markMediaAsLoaded(src: string) {
+  loadedMediaSources.add(src);
+}
+
 export default function ArtworkImage({
   alt,
   className,
   loadingVariant = 'shimmer',
   placeholderClassName,
+  onLoad,
   ...props
 }: ArtworkImageProps) {
-  const [isLoaded, setIsLoaded] = React.useState(false);
+  const source =
+    typeof props.src === 'string'
+      ? props.src
+      : 'src' in props.src
+        ? props.src.src
+        : props.src.default.src;
+  const [isLoaded, setIsLoaded] = React.useState(() => hasLoadedMedia(source));
   const imageRef = React.useRef<HTMLImageElement | null>(null);
   const showPlaceholder = loadingVariant === 'shimmer' && !isLoaded;
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const image = imageRef.current;
 
     if (image?.complete && image.naturalWidth > 0) {
+      markMediaAsLoaded(source);
       setIsLoaded(true);
+    } else {
+      setIsLoaded(hasLoadedMedia(source));
     }
-  }, []);
+  }, [source]);
+
+  const handleLoad: React.ReactEventHandler<HTMLImageElement> = (event) => {
+    markMediaAsLoaded(source);
+    setIsLoaded(true);
+    onLoad?.(event);
+  };
 
   return (
     <>
@@ -60,7 +86,7 @@ export default function ArtworkImage({
         ]
           .filter(Boolean)
           .join(' ')}
-        onLoad={() => setIsLoaded(true)}
+        onLoad={handleLoad}
       />
     </>
   );
