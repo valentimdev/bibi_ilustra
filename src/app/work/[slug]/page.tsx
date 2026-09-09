@@ -59,7 +59,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         
           
           <div className="flex px-0 pt-3 md:px-20">
-          <p className="mx-auto max-w-none text-center text-base leading-7 text-gray-800 md:mt-2 md:text-xl md:text-justify">
+          <p className="mx-auto max-w-none text-center text-base leading-7 text-gray-800 md:mt-2 md:text-xl">
             {project.description}
           </p>
           </div>

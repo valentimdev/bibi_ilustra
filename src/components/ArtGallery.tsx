@@ -17,11 +17,11 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
   };
 
   return (
-    <section className="w-full h-full py-10 pb-24 ">
+    <section className="w-full h-full pt-2 sm:pt-10 pb-24 ">
       <div className="max-w-8xl mx-auto  h-full flex flex-col ">
         <div className="grid grid-cols-1 flex-1 transition-all duration-300">
           {exibition === 'ilustracao' && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0.5 md:gap-2">
           {projects
             .filter(
               (project: ProjectData) => project.category === 'ilustracao'
@@ -62,7 +62,7 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
           )}
 
           {exibition === 'design' && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0.5 md:gap-2">
                   {projects
                 .filter((project: ProjectData) => project.category === 'design')
                 .sort((a, b) => {

@@ -101,7 +101,7 @@ function PresentationArtworkCover({
 }) {
   return (
     <section
-      className="relative mb-1 h-[25vh] sm:h-[50vh] md:h-[60vh] lg:h-[71vh] overflow-hidden bg-black -mx-8 sm:-mx-12 lg:-mx-16"
+      className="relative mb-1 h-[25vh] sm:h-[50vh] md:h-[60vh] lg:h-[71vh] overflow-hidden bg-black mx-0 sm:-mx-4 lg:-mx-8"
     >
       <ClickableArtwork
         src={artwork.src}

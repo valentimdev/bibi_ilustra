@@ -4,7 +4,7 @@ import React from 'react';
 export default function About() {
   return (
     <div className="flex flex-col w-full min-h-screen py-8 gap-16">
-      <div className="flex flex-col gap-8 px-5 py-8 max-w-7xl mx-auto w-full md:flex-row md:px-8">
+      <div className="flex flex-col gap-8 px-4 py-8 max-w-7xl mx-auto w-full md:flex-row md:px-8">
       <div className="relative w-full flex-shrink-0 min-h-[340px] border md:w-[48%] md:min-h-[600px]">
           <Image
            unoptimized
@@ -49,7 +49,7 @@ export default function About() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto w-full flex flex-col   px-10  mb-17">
+      <div className="max-w-7xl mx-auto w-full flex flex-col px-4 md:px-10 mb-17">
         <div className="flex flex-col md:flex-row gap-16 md:gap-20 ">
           <div className="flex flex-col w-full md:w-1/2 ">
             <h3 className="text-2xl font-extrabold text-[#12487F] mb-6">
