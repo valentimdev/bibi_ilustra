@@ -17,7 +17,7 @@ export default function AppShell({ children }: AppShellProps) {
   return (
     <>
       <Header />
-      <main className={isAdminRoute ? 'flex-1' : 'flex-1 max-w-8xl px-8 sm:px-12 lg:px-16'}>
+      <main className={isAdminRoute ? 'flex-1' : 'flex-1 max-w-8xl px-0 sm:px-4 lg:px-8'}>
         {children}
       </main>
       {!isAdminRoute && <Footer />}

@@ -32,24 +32,32 @@ export default function ArtworkImage({
       : 'src' in props.src
         ? props.src.src
         : props.src.default.src;
-  const [isLoaded, setIsLoaded] = React.useState(() => hasLoadedMedia(source));
+  const [loadState, setLoadState] = React.useState(() => {
+    const isAlreadyLoaded = hasLoadedMedia(source);
+
+    return {
+      isLoaded: isAlreadyLoaded,
+      skipAnimation: isAlreadyLoaded,
+    };
+  });
   const imageRef = React.useRef<HTMLImageElement | null>(null);
+  const { isLoaded, skipAnimation } = loadState;
   const showPlaceholder = loadingVariant === 'shimmer' && !isLoaded;
 
   React.useLayoutEffect(() => {
     const image = imageRef.current;
 
-    if (image?.complete && image.naturalWidth > 0) {
+    if (hasLoadedMedia(source) || (image?.complete && image.naturalWidth > 0)) {
       markMediaAsLoaded(source);
-      setIsLoaded(true);
+      setLoadState({ isLoaded: true, skipAnimation: true });
     } else {
-      setIsLoaded(hasLoadedMedia(source));
+      setLoadState({ isLoaded: false, skipAnimation: false });
     }
   }, [source]);
 
   const handleLoad: React.ReactEventHandler<HTMLImageElement> = (event) => {
     markMediaAsLoaded(source);
-    setIsLoaded(true);
+    setLoadState({ isLoaded: true, skipAnimation: false });
     onLoad?.(event);
   };
 
@@ -73,9 +81,11 @@ export default function ArtworkImage({
         ref={imageRef}
         className={[
           className ?? '',
-          loadingVariant === 'shimmer'
-            ? 'transition-all duration-700 ease-out'
-            : 'transition-[filter,transform] duration-500 ease-out',
+          skipAnimation
+            ? ''
+            : loadingVariant === 'shimmer'
+              ? 'transition-all duration-700 ease-out'
+              : 'transition-[filter,transform] duration-500 ease-out',
           loadingVariant === 'shimmer'
             ? isLoaded
               ? 'opacity-100 blur-0 scale-100'
