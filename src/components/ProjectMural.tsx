@@ -10,6 +10,8 @@ import type { MuralSection } from '@/lib/projectData';
 
 type ProjectMuralProps = {
   sections: MuralSection[];
+  children?: React.ReactNode;
+  coverPosition?: 'before-header' | 'default';
 };
 
 type LightboxMedia = {
@@ -18,12 +20,32 @@ type LightboxMedia = {
   type: 'image' | 'video';
 };
 
+type PresentationArtwork = {
+  alt: string;
+  src: string;
+};
+
 const isVideo = (url: string) => {
   return (
     url.toLowerCase().endsWith('.mp4') ||
     url.toLowerCase().endsWith('.webm') ||
     url.toLowerCase().endsWith('.mov')
   );
+};
+
+const getPresentationArtwork = (
+  sections: MuralSection[]
+): PresentationArtwork | null => {
+  const firstSection = sections[0];
+
+  if (!firstSection || firstSection.type !== 'full' || isVideo(firstSection.imageUrl)) {
+    return null;
+  }
+
+  return {
+    alt: firstSection.alt,
+    src: firstSection.imageUrl,
+  };
 };
 
 function ClickableArtwork({
@@ -51,7 +73,7 @@ function ClickableArtwork({
     <button
       type="button"
       onClick={() => onOpen({ src, alt, type: 'image' })}
-      className="block h-full w-full cursor-zoom-in focus:outline-none focus:ring-0"
+      className="relative block h-full w-full cursor-zoom-in focus:outline-none focus:ring-0"
       aria-label={`Ampliar imagem: ${alt}`}
     >
       <ArtworkImage
@@ -67,6 +89,29 @@ function ClickableArtwork({
         style={style}
       />
     </button>
+  );
+}
+
+function PresentationArtworkCover({
+  artwork,
+  onOpen,
+}: {
+  artwork: PresentationArtwork;
+  onOpen: (image: LightboxMedia) => void;
+}) {
+  return (
+    <section
+      className="relative mb-1 h-[25vh] sm:h-[50vh] md:h-[60vh] lg:h-[71vh] overflow-hidden bg-black -mx-8 sm:-mx-12 lg:-mx-16"
+    >
+      <ClickableArtwork
+        src={artwork.src}
+        alt={artwork.alt}
+        fill
+        sizes="100vw"
+        className="object-cover object-center"
+        onOpen={onOpen}
+      />
+    </section>
   );
 }
 
@@ -188,7 +233,7 @@ function LightboxVideo({ media }: { media: LightboxMedia }) {
   );
 }
 
-export default function ProjectMural({ sections }: ProjectMuralProps) {
+export default function ProjectMural({ sections, children, coverPosition = 'default' }: ProjectMuralProps) {
   const [lightboxMedia, setLightboxMedia] = React.useState<LightboxMedia | null>(
     null
   );
@@ -229,10 +274,31 @@ export default function ProjectMural({ sections }: ProjectMuralProps) {
     setLightboxMedia(null);
   }, []);
 
+  const presentationArtwork = getPresentationArtwork(sections);
+  const muralSections = presentationArtwork ? sections.slice(1) : sections;
+
+  const coverElement = presentationArtwork ? (
+    <PresentationArtworkCover
+      artwork={presentationArtwork}
+      onOpen={openLightbox}
+    />
+  ) : null;
+
   return (
     <>
+      {coverPosition === 'before-header' ? (
+        <>
+          {coverElement}
+          {children}
+        </>
+      ) : (
+        <>
+          {coverElement}
+        </>
+      )}
+
       <div className="space-y-1  mb-10 ">
-        {sections.map((section, index) => (
+        {muralSections.map((section, index) => (
           <div key={index}>
             {section.type === 'full' && (
               <div className="w-full flex justify-center  items-center ">

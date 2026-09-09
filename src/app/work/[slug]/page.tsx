@@ -29,43 +29,42 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   return (
-    <section className=" w-full px-0 pt-8 pb-10 sm:px-0 md:px-0">
-
-      <header className="text-center py-4 mx-auto ">
-        <div className="flex items-center justify-center relative ">
-          <div className="absolute left-0 hidden md:block">
-            <Link href="/">
-              <button className="cursor-pointer">
-                <Image
-                  src="/icons/arrow-badge-left.svg"
-                  alt="Voltar"
-                  width={42}
-                  height={42}
-                  className="cursor-pointer"
-                />
-              </button>
-            </Link>
-          </div>
-          
-      
-          <div className="flex flex-col justify-center ">
-            <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-gray-900">
-              {project.title}
-            </h1>
-          </div>
-        </div>
-            <p className="mt-2 text-base sm:text-lg text-gray-500">{project.date}</p>
-          
-      
+    <section className="w-full px-0 pb-10 sm:px-0 md:px-0">
+      <ProjectMural sections={project.muralSections} coverPosition="before-header">
+        <header className="text-center py-4 mx-auto pt-8">
+          <div className="flex items-center justify-center relative ">
+            <div className="absolute left-0 hidden md:block">
+              <Link href="/">
+                <button className="cursor-pointer">
+                  <Image
+                    src="/icons/arrow-badge-left.svg"
+                    alt="Voltar"
+                    width={42}
+                    height={42}
+                    className="cursor-pointer"
+                  />
+                </button>
+              </Link>
+            </div>
+            
         
-        <div className="flex px-0 pt-3 md:px-20">
-        <p className="mx-auto max-w-none text-center text-base leading-7 text-gray-800 md:mt-2 md:text-xl md:text-justify">
-          {project.description}
-        </p>
-        </div>
-      </header>
-
-      <ProjectMural sections={project.muralSections} />
+            <div className="flex flex-col justify-center ">
+              <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-gray-900">
+                {project.title}
+              </h1>
+            </div>
+          </div>
+              <p className="mt-2 text-base sm:text-lg text-gray-500">{project.date}</p>
+            
+        
+          
+          <div className="flex px-0 pt-3 md:px-20">
+          <p className="mx-auto max-w-none text-center text-base leading-7 text-gray-800 md:mt-2 md:text-xl md:text-justify">
+            {project.description}
+          </p>
+          </div>
+        </header>
+      </ProjectMural>
     </section>
   );
 }
