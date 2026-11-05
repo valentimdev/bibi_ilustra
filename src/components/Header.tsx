@@ -130,10 +130,12 @@ function Header() {
             <Image
               src={logoSrc}
               alt="Logo"  
-              width={350}
-              height={93}
+              width={360}
+              height={99}
               unoptimized={true}
-              className="w-52 md:w-[350px] h-auto"
+              // Menor entre 768 e 1023 px para caber entre os links e os ícones
+              // e continuar centralizado.
+              className="w-52 md:w-[220px] lg:w-[340px] xl:w-[360px] h-auto"
             />
           </Link>
         </div>
