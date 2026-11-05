@@ -2,6 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { unstable_cache } from 'next/cache';
 import prisma from './db';
 
 type MuralSectionFull = { type: 'full'; imageUrl: string; alt: string };
@@ -87,6 +88,29 @@ export async function getAllProjects(): Promise<ProjectData[]> {
     muralSections: project.muralSections as MuralSection[],
   }));
 }
+
+export const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+export const MAX_SLUG_LENGTH = 100;
+
+export function isValidSlug(slug: string): boolean {
+  return slug.length <= MAX_SLUG_LENGTH && SLUG_REGEX.test(slug);
+}
+
+// Também sem try/catch: uma lista vazia por erro faria todo projeto dar 404.
+export async function getPublishedSlugs(): Promise<string[]> {
+  const projects = await prisma.project.findMany({
+    where: { published: true },
+    select: { slug: true },
+  });
+  return projects.map((project) => project.slug);
+}
+
+// Invalidada por revalidateTag('projects') nas rotas do admin.
+export const getCachedPublishedSlugs = unstable_cache(
+  getPublishedSlugs,
+  ['published-slugs'],
+  { tags: ['projects'] }
+);
 
 export async function getAllProjectsIncludingDrafts(): Promise<ProjectData[]> {
   try {

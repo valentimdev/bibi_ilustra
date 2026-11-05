@@ -2,8 +2,13 @@
 
 import Image from 'next/image';
 import { notFound, redirect } from 'next/navigation';
-import { draftMode } from 'next/headers';
-import { getProjectBySlug, normalizeProjectSlug } from '@/lib/projectData';
+import {
+  getCachedPublishedSlugs,
+  getProjectBySlug,
+  getPublishedSlugs,
+  isValidSlug,
+  normalizeProjectSlug,
+} from '@/lib/projectData';
 import Link from 'next/link';
 import ProjectMural from '@/components/ProjectMural';
 
@@ -13,18 +18,35 @@ type ProjectPageProps = {
   }>;
 };
 
+// Gera no build as páginas dos projetos publicados. Projetos novos continuam
+// funcionando sem novo build, porque dynamicParams fica no padrão (true).
+export async function generateStaticParams() {
+  const slugs = await getPublishedSlugs();
+  return slugs.map((slug) => ({ slug }));
+}
+
 export default async function ProjectPage({ params }: ProjectPageProps) {
-  const { isEnabled } = await draftMode();
   const { slug } = await params;
   const normalizedSlug = normalizeProjectSlug(slug);
+
+  // Slug com formato inválido nem chega ao banco.
+  if (!isValidSlug(normalizedSlug)) {
+    notFound();
+  }
 
   if (slug !== normalizedSlug) {
     redirect(`/work/${normalizedSlug}`);
   }
 
+  // Endereços inventados param aqui, usando só a lista em cache.
+  const publishedSlugs = await getCachedPublishedSlugs();
+  if (!publishedSlugs.includes(normalizedSlug)) {
+    notFound();
+  }
+
   const project = await getProjectBySlug(normalizedSlug);
 
-  if (!project || (!project.published && !isEnabled)) {
+  if (!project || !project.published) {
     notFound();
   }
 

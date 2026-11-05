@@ -3,9 +3,12 @@ import { requireAuth } from '@/lib/auth';
 import {
   getAllProjectsIncludingDrafts,
   saveProject,
+  normalizeProjectSlug,
+  SLUG_REGEX,
   type ProjectData,
 } from '@/lib/projectData';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
+
 
 export async function GET() {
   try {
@@ -46,7 +49,17 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const project: ProjectData = body;
+    const project: ProjectData = {
+      ...body,
+      slug: normalizeProjectSlug(String(body.slug ?? '')),
+    };
+
+    if (!project.slug || !SLUG_REGEX.test(project.slug)) {
+      return NextResponse.json(
+        { error: 'Slug inválido. Use apenas letras minúsculas, números e hífens.' },
+        { status: 400 }
+      );
+    }
 
     // Gerar ID único se não fornecido
     if (!project.id) {
@@ -56,7 +69,9 @@ export async function POST(request: NextRequest) {
     await saveProject(project);
 
     revalidatePath('/');
-    
+    revalidatePath(`/work/${project.slug}`);
+    revalidateTag('projects');
+
     return NextResponse.json({ success: true, project }, { status: 201 });
   } catch (error) {
     console.error('Erro ao criar projeto:', error);

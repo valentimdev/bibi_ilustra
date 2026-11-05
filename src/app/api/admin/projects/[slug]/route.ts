@@ -5,11 +5,11 @@ import {
   updateProject,
   deleteProject,
   normalizeProjectSlug,
+  SLUG_REGEX,
   type ProjectData,
 } from '@/lib/projectData';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
-const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export async function GET(
   request: NextRequest,
@@ -74,6 +74,7 @@ export async function PUT(
     revalidatePath('/');
     revalidatePath(`/work/${normalizedSlug}`);
     revalidatePath(`/work/${project.slug}`);
+    revalidateTag('projects');
 
     return NextResponse.json({ success: true, project });
   } catch (error) {
@@ -109,6 +110,7 @@ export async function DELETE(
 
     revalidatePath('/', 'page');
     revalidatePath(`/work/${normalizedSlug}`, 'page');
+    revalidateTag('projects');
 
     return NextResponse.json({ success: true });
   } catch (error) {
