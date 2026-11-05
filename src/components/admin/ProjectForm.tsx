@@ -337,12 +337,11 @@ export default function ProjectForm({
 
     setUploading(key);
     try {
-      // A primeira seção "full" é a imagem de apresentação do mural.
-      const firstFullIndex = formData.muralSections.findIndex(
-        (s) => s.type === 'full'
-      );
+      // A primeira seção, se for "full", é o header do projeto.
       const preset: ImagePresetName =
-        sectionIndex === firstFullIndex ? 'muralPresentation' : 'muralSection';
+        sectionIndex === 0 && formData.muralSections[0]?.type === 'full'
+          ? 'muralPresentation'
+          : 'muralSection';
       const fileToUpload = await prepareFile(file, preset, key);
       if (!fileToUpload) return;
       setFileSizes((prev) => ({ ...prev, [key]: fileToUpload.size }));
@@ -609,7 +608,14 @@ export default function ProjectForm({
       {/* Seções do Mural */}
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Seções do Mural</h2>
+          <div>
+            <h2 className="text-xl font-semibold">Seções do Mural</h2>
+            <p className="text-sm text-gray-600 mt-1">
+              Se a <strong>primeira seção</strong> for do tipo <strong>Full</strong>, ela
+              vira a <strong>capa do projeto</strong>: aparece no topo da página, em largura
+              cheia, com o título por cima.
+            </p>
+          </div>
           <div className="flex gap-2">
             <button
               type="button"
@@ -769,6 +775,16 @@ function SectionEditor({
     return (
       <div className="border border-gray-200 rounded-lg p-4 bg-white">
         <SectionHeader title={`Seção Full #${index + 1}`} />
+        {index === 0 && (
+          <div className="mb-4 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800">
+            <strong>Capa do projeto.</strong> Esta arte aparece no topo da página, em largura
+            cheia, com o título e a data por cima do rodapé dela (no celular, eles ficam
+            abaixo). Prefira artes <strong>horizontais</strong> (por exemplo, 1640 × 624 px),
+            que aparecem inteiras. Artes mais altas que a tela perdem um pouco em cima e
+            embaixo, e o rodapé fica escurecido para o título ficar legível: evite deixar
+            detalhes importantes nas bordas.
+          </div>
+        )}
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">

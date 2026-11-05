@@ -16,6 +16,7 @@ import { isVideoUrl } from '@/lib/media';
 import { SITE_DESCRIPTION } from '@/lib/site';
 import Link from 'next/link';
 import ProjectMural from '@/components/ProjectMural';
+import ProjectHero from '@/components/ProjectHero';
 
 type ProjectPageProps = {
   params: Promise<{
@@ -140,11 +141,25 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     notFound();
   }
 
-  return (
-    <section className=" w-full px-0 pt-8 pb-10 sm:px-0 md:px-0">
+  // Se a primeira seção do mural for "full", ela vira o header do projeto:
+  // aparece antes do título, ocupando toda a largura, e sai do mural.
+  const [firstSection, ...restSections] = project.muralSections;
+  const hero = firstSection?.type === 'full' && firstSection.imageUrl ? firstSection : null;
+  const muralSections = hero ? restSections : project.muralSections;
 
-      <header className="text-center py-4 mx-auto ">
-        <div className="flex items-center justify-center relative ">
+  return (
+    <section className={`w-full px-0 pb-10 sm:px-0 md:px-0 ${hero ? '' : 'pt-8'}`}>
+      {hero && (
+        <ProjectHero
+          src={hero.imageUrl}
+          alt={hero.alt || project.title}
+          title={project.title}
+          date={project.date}
+        />
+      )}
+
+      <header className={`text-center mx-auto ${hero ? 'pt-6 pb-4 md:pt-10' : 'py-4'}`}>
+        <div className={`flex items-center justify-center relative ${hero ? 'md:hidden' : ''}`}>
           <div className="absolute left-0 hidden md:block">
             <Link href="/">
               <button className="cursor-pointer">
@@ -166,7 +181,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </h1>
           </div>
         </div>
-            <p className="mt-2 text-base sm:text-lg text-gray-500">{project.date}</p>
+            <p className={`mt-2 text-base sm:text-lg text-gray-500 ${hero ? 'md:hidden' : ''}`}>{project.date}</p>
           
       
         
@@ -177,7 +192,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </div>
       </header>
 
-      <ProjectMural sections={project.muralSections} />
+      <ProjectMural sections={muralSections} />
     </section>
   );
 }
