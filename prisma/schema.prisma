@@ -8,12 +8,25 @@ datasource db {
 }
 
 model Admin {
-  id           Int      @id @default(autoincrement())
-  username     String   @unique
-  passwordHash String   @map("password_hash")
-  createdAt    DateTime @default(now()) @map("created_at")
+  id           Int       @id @default(autoincrement())
+  username     String    @unique
+  passwordHash String    @map("password_hash")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  sessions     Session[]
 
   @@map("admins")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  tokenHash String   @unique @map("token_hash")
+  adminId   Int      @map("admin_id")
+  admin     Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([adminId])
+  @@map("sessions")
 }
 
 model Project {
