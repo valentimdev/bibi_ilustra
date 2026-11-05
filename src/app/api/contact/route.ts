@@ -49,7 +49,7 @@ function validateInput(name: string, email: string, message: string): string | n
   if (!email || email.trim().length === 0) return 'Email é obrigatório';
   if (email.length > MAX_EMAIL_LENGTH) return 'Email muito longo';
   
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[^\s@<>"'&]+@[^\s@<>"'&]+\.[^\s@<>"'&]+$/;
   if (!emailRegex.test(email)) return 'Email inválido';
 
   if (!message || message.trim().length === 0) return 'Mensagem é obrigatória';
@@ -82,6 +82,7 @@ export async function POST(request: NextRequest) {
     }
 
     const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
     const safeMessage = escapeHtml(message);
 
     const { data, error } = await resend.emails.send({
@@ -92,7 +93,7 @@ export async function POST(request: NextRequest) {
       html: `
         <div style="font-family: sans-serif; color: #333;">
           <h2>Nova mensagem do bibi ilustra :P</h2>
-          <p><strong>De:</strong> ${safeName} (${email})</p>
+          <p><strong>De:</strong> ${safeName} (${safeEmail})</p>
           <hr />
           <p><strong>Mensagem:</strong></p>
           <p style="white-space: pre-wrap;">${safeMessage.replace(/\n/g, '<br>')}</p>
