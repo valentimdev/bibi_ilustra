@@ -5,7 +5,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-
+import mobileLogo from '../../public/logos/katty_logo_mobile.svg';
 function Header() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,19 +21,19 @@ function Header() {
   const [isIgHovered, setIsIgHovered] = useState(false);
   const [isLinkedInHovered, setIsLinkedInHovered] = useState(false);
 
-  const [logoSrc, setLogoSrc] = useState('/logos/bianca_katty_logo.svg');
-  
+  const [logoSrc, setLogoSrc] = useState('/logos/logo.webp');
+
   const handleMouseEnter = () => {
-    setLogoSrc('/logos/bianca_katty_logo_gif.gif');
+    setLogoSrc('/logos/logo_hover.webp');
   };
-  
+
   const handleMouseLeave = () => {
-    setLogoSrc('/logos/bianca_katty_logo.svg');
+    setLogoSrc('/logos/logo.webp');
   };
 
   const isActive = (path: string) => {
     if (path === '/') {
-      return pathname === '/'
+      return pathname === '/';
     }
     return pathname === path;
   };
@@ -56,7 +56,7 @@ function Header() {
         backgroundRepeat: 'no-repeat',
       }}
     >
-      <nav className="max-w-8xl mx-4 grid grid-cols-[56px_auto_56px] items-center h-30 px-2 sm:mx-10 sm:grid-cols-[1fr_auto_1fr] sm:px-6 lg:px-8">
+      <nav className=" relative z-50 max-w-8xl mx-4 flex md:grid grid-cols-[56px_auto_56px] justify-between md:items-center h-30 px-2 sm:mx-10 sm:grid-cols-[1fr_auto_1fr] sm:px-6 lg:px-8 ">
         <div className="hidden md:flex flex-row justify-start items-center gap-3">
           <Link href="/">
             <p
@@ -121,7 +121,7 @@ function Header() {
           </button>
         </div>
 
-        <div className="flex justify-center items-center">
+        <div className="hidden md:flex justify-center items-center">
           <Link
             href="/"
             onMouseEnter={handleMouseEnter}
@@ -129,12 +129,25 @@ function Header() {
           >
             <Image
               src={logoSrc}
-              alt="Logo"
+              alt="Logo"  
               width={350}
-              height={70}
+              height={93}
               unoptimized={true}
               className="w-52 md:w-[350px] h-auto"
             />
+          </Link>
+        </div>
+        <div className=" w-full md:hidden flex justify-end items-center  ">
+          <Link
+          href="/"
+          >
+            <Image
+            src={mobileLogo}
+            alt="Logo"
+            unoptimized={true}
+            className="w-[72px] h-auto flex justify-center "
+            
+          />
           </Link>
         </div>
 
@@ -201,16 +214,8 @@ function Header() {
         <div className="flex md:hidden"></div>
       </nav>
 
-      {/* Menu Mobile (Overlay) */}
       <div
-        className={`fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 md:hidden ${
-          isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
-        onClick={closeMenu}
-      ></div>
-
-      <div
-        className={`fixed top-0 left-0 h-full w-64 bg-[var(--primary)] z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
+        className={`fixed inset-0 w-full h-dvh bg-[color:rgba(236,38,119,0.85)] z-40 transform transition-transform duration-300 ease-in-out md:hidden ${
           isMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         style={{
@@ -219,10 +224,10 @@ function Header() {
           backgroundPosition: 'center',
         }}
       >
-        <div className="flex flex-col p-8 pt-20">
+        <div className="flex h-full flex-col items-center justify-center px-8 pt-15 pb-10 text-center gap-10">
           <Link href="/" onClick={closeMenu}>
             <p
-              className={`font-extrabold text-2xl mb-6 transition-all duration-300 ${
+              className={`font-extrabold text-4xl mb-6 transition-all duration-300 ${
                 isActive('/')
                   ? 'text-[var(--accent)]'
                   : 'text-white hover:text-[var(--accent)]'
@@ -234,7 +239,7 @@ function Header() {
 
           <Link href="/about" onClick={closeMenu}>
             <p
-              className={`font-extrabold text-2xl mb-6 transition-all duration-300 ${
+              className={`font-extrabold text-4xl mb-6 transition-all duration-300 ${
                 isActive('/about')
                   ? 'text-[var(--accent)]'
                   : 'text-white hover:text-[var(--accent)]'
@@ -246,7 +251,7 @@ function Header() {
 
           <Link href="/contact" onClick={closeMenu}>
             <p
-              className={`font-extrabold text-2xl mb-6 transition-all duration-300 ${
+              className={`font-extrabold text-4xl mb-6 transition-all duration-300 ${
                 isActive('/contact')
                   ? 'text-[var(--accent)]'
                   : 'text-white hover:text-[var(--accent)]'
@@ -256,7 +261,7 @@ function Header() {
             </p>
           </Link>
 
-          <div className="mt-8 pt-8 border-t border-white/30">
+          <div>
             <ul className="flex flex-row gap-4">
               <li>
                 <a
@@ -268,8 +273,8 @@ function Header() {
                     unoptimized
                     src={svgBehanceOn}
                     alt="Behance"
-                    width={35}
-                    height={35}
+                    width={75}
+                    height={75}
                     className="cursor-pointer"
                   />
                 </a>
@@ -284,8 +289,8 @@ function Header() {
                     unoptimized
                     src={svgIgOn}
                     alt="Instagram"
-                    width={35}
-                    height={35}
+                    width={75}
+                    height={75}
                     className="cursor-pointer"
                   />
                 </a>
@@ -300,8 +305,8 @@ function Header() {
                     unoptimized
                     src={svgLinkedInOn}
                     alt="LinkedIn"
-                    width={35}
-                    height={35}
+                    width={75}
+                    height={75}
                     className="cursor-pointer"
                   />
                 </a>
