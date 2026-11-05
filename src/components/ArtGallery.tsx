@@ -4,6 +4,32 @@ import React from 'react';
 import Link from 'next/link';
 import type { ProjectData } from '@/lib/projectData';
 import ArtworkImage from './ArtworkImage';
+import LazyVideo from './LazyVideo';
+import { isVideoUrl } from '@/lib/media';
+
+// Capa em vídeo (MP4/WebM) ou imagem, sempre preenchendo o quadrado.
+function CoverMedia({ project }: { project: ProjectData }) {
+  if (isVideoUrl(project.coverImage)) {
+    return (
+      <LazyVideo
+        src={project.coverImage}
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+    );
+  }
+
+  return (
+    <ArtworkImage
+      unoptimized
+      src={project.coverImage}
+      alt={project.title}
+      fill
+      sizes="(max-width: 1024px) 50vw, 25vw"
+      className="object-cover"
+      placeholderClassName="bg-[var(--accent)]/30"
+    />
+  );
+}
 
 type ArtGalleryProps = {
   projects: ProjectData[];
@@ -35,15 +61,7 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
                 .map((project: ProjectData) => (
                   <Link href={`/work/${project.slug}`} key={project.id}>
                     <div className="group relative block w-full aspect-square overflow-hidden cursor-pointer">
-                      <ArtworkImage
-                        unoptimized
-                        src={project.coverImage}
-                        alt={project.title}
-                        fill
-                        sizes="(max-width: 1024px) 50vw, 25vw"
-                        className="object-cover"
-                        placeholderClassName="bg-[var(--accent)]/30"
-                      />
+                      <CoverMedia project={project} />
 
                       <div className="absolute inset-0 bg-black bg-opacity-60 flex items-end p-6 opacity-0 group-hover:opacity-60 transition-opacity duration-300">
                         <div>
@@ -74,15 +92,7 @@ const ArtGallery: React.FC<ArtGalleryProps> = ({ projects }) => {
                 .map((project: ProjectData) => (
                   <Link href={`/work/${project.slug}`} key={project.id}>
                     <div className="group relative block w-full aspect-square overflow-hidden cursor-pointer">
-                      <ArtworkImage
-                        unoptimized
-                        src={project.coverImage}
-                        alt={project.title}
-                        fill
-                        sizes="(max-width: 1024px) 50vw, 25vw"
-                        className="object-cover"
-                        placeholderClassName="bg-[var(--accent)]/30"
-                      />
+                      <CoverMedia project={project} />
 
                       <div className="absolute inset-0 bg-black bg-opacity-60 flex items-end p-6 opacity-0 group-hover:opacity-60  transition-opacity duration-300">
                         <div>

@@ -1,8 +1,77 @@
 'use client';
-import { convertImageToWebP } from '@/lib/imageUtils';
-import { useState } from 'react';
+import {
+  convertImageToWebP,
+  IMAGE_PRESETS,
+  type ImagePresetName,
+} from '@/lib/imageUtils';
+import {
+  convertVideo,
+  getVideoDuration,
+  VIDEO_LIMITS,
+  VideoConversionCanceledError,
+} from '@/lib/videoUtils';
+import { isVideoUrl } from '@/lib/media';
+import { useRef, useState } from 'react';
 import type { ProjectData, MuralSection } from '@/lib/projectData';
 import { uploadImage } from '@/lib/blob';
+
+const GIF_WARNING =
+  'GIF animado fica muito pesado. Exporte como MP4 para manter a animação com um arquivo bem menor.';
+
+const EXPORT_TIP =
+  'Exporte em H.264 (MP4), sem áudio, com 2 a 3 Mbps. Veja as dicas no "Guia da Bibi".';
+
+type ConversionState = { key: string; progress: number } | null;
+
+// Preview que mostra <video> para arquivos de vídeo e <img> para o resto.
+function MediaPreview({ src, className }: { src: string; className: string }) {
+  if (isVideoUrl(src)) {
+    return (
+      <video src={src} className={className} muted loop playsInline autoPlay />
+    );
+  }
+  return <img src={src} alt="Preview" className={className} />;
+}
+
+// Progresso da conversão, botão de cancelar e avisos de um campo de upload.
+function UploadStatus({
+  uploadKey,
+  conversion,
+  notice,
+  onCancel,
+}: {
+  uploadKey: string;
+  conversion: ConversionState;
+  notice?: string;
+  onCancel: () => void;
+}) {
+  const converting = conversion?.key === uploadKey;
+  return (
+    <>
+      {converting && (
+        <div className="mt-2 flex items-center gap-3">
+          <div className="h-2 flex-1 overflow-hidden rounded bg-gray-200">
+            <div
+              className="h-full bg-[var(--secondary)] transition-[width]"
+              style={{ width: `${Math.round(conversion.progress * 100)}%` }}
+            />
+          </div>
+          <span className="text-xs text-gray-600 w-24">
+            Convertendo {Math.round(conversion.progress * 100)}%
+          </span>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="cursor-pointer text-sm text-red-600 hover:text-red-800"
+          >
+            Cancelar
+          </button>
+        </div>
+      )}
+      {notice && <p className="mt-1 text-sm text-amber-700">{notice}</p>}
+    </>
+  );
+}
 
 interface ProjectFormProps {
   project: ProjectData;
@@ -30,7 +99,16 @@ export default function ProjectForm({
   const [fileSizes, setFileSizes] = useState<Record<string, number>>({});
   const [formData, setFormData] = useState<ProjectData>(project);
   const [uploading, setUploading] = useState<string | null>(null);
-  const [useWebP, setUseWebP] = useState(false);
+  const [useWebP, setUseWebP] = useState(true);
+  const [useVideoOptimization, setUseVideoOptimization] = useState(true);
+  const [conversion, setConversion] = useState<ConversionState>(null);
+  const [notices, setNotices] = useState<Record<string, string | undefined>>({});
+  const cancelRef = useRef<AbortController | null>(null);
+
+  const setNotice = (key: string, message?: string) =>
+    setNotices((prev) => ({ ...prev, [key]: message }));
+
+  const cancelConversion = () => cancelRef.current?.abort();
   const handleInputChange = (field: keyof ProjectData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -43,6 +121,117 @@ export default function ProjectForm({
     return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   };
 
+  /**
+   * Converte (se as opções estiverem marcadas) e valida o arquivo antes do
+   * upload. Retorna null quando o envio deve ser interrompido.
+   */
+  const prepareFile = async (
+    file: File,
+    target: ImagePresetName,
+    key: string
+  ): Promise<File | null> => {
+    setNotice(key, undefined);
+
+    if (file.type === 'image/gif') {
+      setNotice(key, GIF_WARNING);
+    }
+
+    if (file.type.startsWith('video/')) {
+      return prepareVideo(file, target === 'cover' ? 'cover' : 'mural', key);
+    }
+
+    if (useWebP && file.type.startsWith('image/')) {
+      const preset = IMAGE_PRESETS[target];
+      try {
+        return await convertImageToWebP(file, preset.quality, preset.maxSize);
+      } catch (err) {
+        console.error('Erro ao converter WebP, usando original', err);
+      }
+    }
+
+    return file;
+  };
+
+  const prepareVideo = async (
+    file: File,
+    preset: 'cover' | 'mural',
+    key: string
+  ): Promise<File | null> => {
+    if (file.size > VIDEO_LIMITS.maxInputSize) {
+      alert(
+        `Vídeo muito grande (${formatFileSize(file.size)}). O limite é ` +
+          `${formatFileSize(VIDEO_LIMITS.maxInputSize)}, porque arquivos maiores ` +
+          `podem travar o navegador. Exporte uma versão menor e tente de novo.`
+      );
+      return null;
+    }
+
+    let finalFile = file;
+
+    if (useVideoOptimization) {
+      const controller = new AbortController();
+      cancelRef.current = controller;
+      setConversion({ key, progress: 0 });
+      try {
+        finalFile = await convertVideo(
+          file,
+          preset,
+          (progress) => setConversion({ key, progress }),
+          controller.signal
+        );
+      } catch (err) {
+        if (err instanceof VideoConversionCanceledError) {
+          setNotice(key, 'Conversão cancelada. Nada foi enviado.');
+          return null;
+        }
+        finalFile = file;
+      } finally {
+        setConversion(null);
+        cancelRef.current = null;
+      }
+
+      setNotice(
+        key,
+        finalFile !== file
+          ? `${formatFileSize(file.size)} → ${formatFileSize(finalFile.size)}`
+          : 'Vídeo mantido no original: a conversão não foi possível neste navegador ou não reduziu o tamanho.'
+      );
+    }
+
+    // A validação vale para o arquivo final (convertido ou original).
+    if (preset === 'cover') {
+      if (finalFile.size > VIDEO_LIMITS.coverMaxSize) {
+        alert(
+          `O vídeo da capa precisa ter no máximo ${formatFileSize(VIDEO_LIMITS.coverMaxSize)} ` +
+            `(este tem ${formatFileSize(finalFile.size)}). ${EXPORT_TIP}`
+        );
+        return null;
+      }
+      try {
+        const duration = await getVideoDuration(finalFile);
+        if (duration > VIDEO_LIMITS.coverMaxDuration + 0.1) {
+          alert(
+            `O vídeo da capa precisa ter no máximo ${VIDEO_LIMITS.coverMaxDuration} segundos ` +
+              `(este tem ${Math.round(duration)} s). Corte o vídeo ou marque "Otimizar vídeos". ${EXPORT_TIP}`
+          );
+          return null;
+        }
+      } catch {
+        alert(`Não foi possível ler este vídeo. ${EXPORT_TIP}`);
+        return null;
+      }
+    } else if (finalFile.size > VIDEO_LIMITS.muralMaxSize) {
+      alert(
+        `Vídeos do mural podem ter no máximo ${formatFileSize(VIDEO_LIMITS.muralMaxSize)} ` +
+          `(este tem ${formatFileSize(finalFile.size)}). Vídeos longos e com som devem ir ` +
+          `para o YouTube como não listado.`
+      );
+      return null;
+    }
+
+    return finalFile;
+  };
+
   const handleCoverImageUpload = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -51,22 +240,18 @@ export default function ProjectForm({
 
     setUploading('cover');
     try {
-      let fileToUpload = file;
-      if (useWebP) {
-        try {
-          fileToUpload = await convertImageToWebP(file);
-        } catch (err) {
-          console.error("Erro ao converter WebP, usando original", err);
-        }
-      }
+      const fileToUpload = await prepareFile(file, 'cover', 'cover');
+      if (!fileToUpload) return;
+      setFileSizes((prev) => ({ ...prev, cover: fileToUpload.size }));
       const folder = `projects/${formData.slug || 'temp'}`;
       const result = await uploadImage(fileToUpload, folder);
       handleInputChange('coverImage', result.url);
     } catch (error) {
       console.error('Erro ao fazer upload:', error);
-      alert('Erro ao fazer upload da imagem');
+      alert('Erro ao fazer upload do arquivo');
     } finally {
       setUploading(null);
+      e.target.value = '';
     }
   };
 
@@ -152,15 +337,15 @@ export default function ProjectForm({
 
     setUploading(key);
     try {
-      let fileToUpload = file;
-      if (useWebP) {
-        try {
-          fileToUpload = await convertImageToWebP(file);
-          setFileSizes((prev) => ({ ...prev, [key]: fileToUpload.size }));
-        } catch (err) {
-          console.error("Erro ao converter WebP", err);
-        }
-      }
+      // A primeira seção "full" é a imagem de apresentação do mural.
+      const firstFullIndex = formData.muralSections.findIndex(
+        (s) => s.type === 'full'
+      );
+      const preset: ImagePresetName =
+        sectionIndex === firstFullIndex ? 'muralPresentation' : 'muralSection';
+      const fileToUpload = await prepareFile(file, preset, key);
+      if (!fileToUpload) return;
+      setFileSizes((prev) => ({ ...prev, [key]: fileToUpload.size }));
       const folder = `projects/${formData.slug || 'temp'}`;
       const result = await uploadImage(fileToUpload, folder);
       const section = formData.muralSections[sectionIndex];
@@ -227,6 +412,26 @@ export default function ProjectForm({
             </label>
             <p className="text-xs text-gray-500">
               Reduz drasticamente o tamanho dos arquivos e acelera o carregamento.
+            </p>
+            <p className="text-xs text-gray-500">
+              Para line art, pixel art ou peças com linhas muito finas, desmarque para enviar o PNG original.
+            </p>
+          </div>
+        </div>
+          <div className="flex items-center mb-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
+          <input
+            type="checkbox"
+            id="useVideoOptimization"
+            checked={useVideoOptimization}
+            onChange={(e) => setUseVideoOptimization(e.target.checked)}
+            className="w-4 h-4 text-[var(--secondary)] rounded border-gray-300 focus:ring-[var(--secondary)]"
+          />
+          <div className="ml-3">
+            <label htmlFor="useVideoOptimization" className="text-sm font-medium text-gray-700 cursor-pointer">
+              Otimizar vídeos
+            </label>
+            <p className="text-xs text-gray-500">
+              Converte no navegador, tira o áudio e comprime. Capa: 1080 × 1080, até 15 s. Mural: até 1920 px de largura.
             </p>
           </div>
         </div>
@@ -357,10 +562,16 @@ export default function ProjectForm({
           </label>
           <input
             type="file"
-            accept="image/*"
+            accept="image/*,video/mp4,video/webm"
             onChange={handleCoverImageUpload}
             className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md"
             disabled={uploading === 'cover'}
+          />
+          <UploadStatus
+            uploadKey="cover"
+            conversion={conversion}
+            notice={notices.cover}
+            onCancel={cancelConversion}
           />
           {fileSizes.cover && (
             <p className="text-sm text-gray-500 mt-1">
@@ -368,9 +579,8 @@ export default function ProjectForm({
             </p>
           )}
           {formData.coverImage && (
-            <img
+            <MediaPreview
               src={formData.coverImage}
-              alt="Cover"
               className="mt-2 w-32 h-32 object-cover rounded"
             />
           )}
@@ -447,6 +657,9 @@ export default function ProjectForm({
             uploading={uploading}
             fileSizes={fileSizes}
             formatFileSize={formatFileSize}
+            conversion={conversion}
+            notices={notices}
+            onCancelConversion={cancelConversion}
           />
         ))}
       </div>
@@ -484,6 +697,9 @@ function SectionEditor({
   uploading,
   fileSizes,
   formatFileSize,
+  conversion,
+  notices,
+  onCancelConversion,
 }: {
   section: MuralSection;
   index: number;
@@ -495,7 +711,19 @@ function SectionEditor({
   uploading: string | null;
   fileSizes: Record<string, number>;
   formatFileSize: (bytes: number) => string;
+  conversion: ConversionState;
+  notices: Record<string, string | undefined>;
+  onCancelConversion: () => void;
 }) {
+  const status = (key: string) => (
+    <UploadStatus
+      uploadKey={key}
+      conversion={conversion}
+      notice={notices[key]}
+      onCancel={onCancelConversion}
+    />
+  );
+
   // Cabeçalho comum para todas as seções
   const SectionHeader = ({ title }: { title: string }) => (
     <div className="flex justify-between items-center mb-4">
@@ -556,15 +784,15 @@ function SectionEditor({
               disabled={uploading === `${index}-null`}
               className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md"
             />
+            {status(`${index}-null`)}
             {fileSizes[`${index}-null`] && (
               <p className="text-sm text-gray-500 mt-1">
                 Tamanho: {formatFileSize(fileSizes[`${index}-null`] || 0)}
               </p>
             )}
             {section.imageUrl && (
-              <img
+              <MediaPreview
                 src={section.imageUrl}
-                alt="Preview"
                 className="mt-2 w-full max-w-md h-48 object-cover rounded"
               />
             )}
@@ -605,15 +833,15 @@ function SectionEditor({
                 disabled={uploading === `${index}-${imgIndex}`}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               />
+              {status(`${index}-${imgIndex}`)}
               {fileSizes[`${index}-${imgIndex}`] && (
                 <p className="text-sm text-gray-500 mt-1">
                   Tamanho: {formatFileSize(fileSizes[`${index}-${imgIndex}`])}
                 </p>
               )}
               {section.imagesUrl[imgIndex] && (
-                <img
+                <MediaPreview
                   src={section.imagesUrl[imgIndex]}
-                  alt="Preview"
                   className="mt-2 w-full h-48 object-cover rounded"
                 />
               )}
@@ -655,15 +883,15 @@ function SectionEditor({
                 disabled={uploading === `${index}-${imgIndex}`}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               />
+              {status(`${index}-${imgIndex}`)}
               {fileSizes[`${index}-${imgIndex}`] && (
                 <p className="text-sm text-gray-500 mt-1">
                   Tamanho: {formatFileSize(fileSizes[`${index}-${imgIndex}`])}
                 </p>
               )}
               {section.imagesUrl[imgIndex] && (
-                <img
+                <MediaPreview
                   src={section.imagesUrl[imgIndex]}
-                  alt="Preview"
                   className="mt-2 w-full h-32 object-cover rounded"
                 />
               )}

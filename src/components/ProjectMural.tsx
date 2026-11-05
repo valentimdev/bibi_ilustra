@@ -7,6 +7,8 @@ import ArtworkImage, {
   markMediaAsLoaded,
 } from '@/components/ArtworkImage';
 import type { MuralSection } from '@/lib/projectData';
+import LazyVideo from '@/components/LazyVideo';
+import { isVideoUrl } from '@/lib/media';
 
 type ProjectMuralProps = {
   sections: MuralSection[];
@@ -16,14 +18,6 @@ type LightboxMedia = {
   alt: string;
   src: string;
   type: 'image' | 'video';
-};
-
-const isVideo = (url: string) => {
-  return (
-    url.toLowerCase().endsWith('.mp4') ||
-    url.toLowerCase().endsWith('.webm') ||
-    url.toLowerCase().endsWith('.mov')
-  );
 };
 
 function ClickableArtwork({
@@ -86,13 +80,9 @@ function ClickableVideo({
       className="block h-full w-full cursor-zoom-in focus:outline-none focus:ring-0"
       aria-label={`Ampliar video: ${alt}`}
     >
-      <video
+      <LazyVideo
         src={src}
         className="w-full h-auto"
-        loop
-        playsInline
-        autoPlay
-        muted
         onLoadedData={() => markMediaAsLoaded(src)}
       />
     </button>
@@ -147,8 +137,8 @@ export default function ProjectMural({ sections }: ProjectMuralProps) {
           <div key={index}>
             {section.type === 'full' && (
               <div className="w-full flex justify-center  items-center ">
-                <div className={`w-full flex justify-center  items-center px-0 ${isVideo(section.imageUrl) ? 'px-20' : ''}`}>
-                  {isVideo(section.imageUrl) ? (
+                <div className={`w-full flex justify-center  items-center px-0 ${isVideoUrl(section.imageUrl) ? 'px-20' : ''}`}>
+                  {isVideoUrl(section.imageUrl) ? (
                     <ClickableVideo
                       src={section.imageUrl}
                       alt={section.alt}
