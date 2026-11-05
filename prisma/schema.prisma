@@ -45,3 +45,16 @@ model Project {
 
   @@map("projects")
 }
+
+// Tentativas de login que falharam, usadas para limitar força bruta.
+model LoginAttempt {
+  id        Int      @id @default(autoincrement())
+  ip        String
+  username  String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([username, createdAt])
+  @@index([ip, createdAt])
+  @@index([createdAt])
+  @@map("login_attempts")
+}
