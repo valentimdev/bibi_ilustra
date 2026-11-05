@@ -40,60 +40,52 @@ export function normalizeProjectSlug(slug: string): string {
   return slug.trim().toLowerCase();
 }
 
+// Sem try/catch de propósito: se o banco falhar, o erro sobe e o Next não
+// guarda em cache uma página vazia ou um 404 falso.
 export async function getProjectBySlug(
   slug: string
 ): Promise<ProjectData | undefined> {
-  try {
-    const normalizedSlug = normalizeProjectSlug(slug);
-    const project = await prisma.project.findUnique({
-      where: { slug: normalizedSlug },
-    });
+  const normalizedSlug = normalizeProjectSlug(slug);
+  const project = await prisma.project.findUnique({
+    where: { slug: normalizedSlug },
+  });
 
-    if (!project) {
-      return undefined;
-    }
-
-    return {
-      id: project.id,
-      slug: project.slug,
-      title: project.title,
-      description: project.description,
-      date: project.date,
-      category: project.category,
-      coverImage: project.coverImage,
-      order: project.order,
-      published: project.published,
-      muralSections: project.muralSections as MuralSection[],
-    };
-  } catch (error) {
-    console.error('Erro ao buscar projeto:', error);
+  if (!project) {
     return undefined;
   }
+
+  return {
+    id: project.id,
+    slug: project.slug,
+    title: project.title,
+    description: project.description,
+    date: project.date,
+    category: project.category,
+    coverImage: project.coverImage,
+    order: project.order,
+    published: project.published,
+    muralSections: project.muralSections as MuralSection[],
+  };
 }
 
 export async function getAllProjects(): Promise<ProjectData[]> {
-  try {
-    const projects = await prisma.project.findMany({
-      where: { published: true },
-      orderBy: { createdAt: 'desc' },
-    });
+  const projects = await prisma.project.findMany({
+    where: { published: true },
+    orderBy: { createdAt: 'desc' },
+  });
 
-    return projects.map((project) => ({
-      id: project.id,
-      slug: project.slug,
-      title: project.title,
-      description: project.description,
-      date: project.date,
-      category: project.category,
-      coverImage: project.coverImage,
-      order: project.order,
-      published: project.published,
-      muralSections: project.muralSections as MuralSection[],
-    }));
-  } catch (error) {
-    console.error('Erro ao listar projetos:', error);
-    return [];
-  }
+  return projects.map((project) => ({
+    id: project.id,
+    slug: project.slug,
+    title: project.title,
+    description: project.description,
+    date: project.date,
+    category: project.category,
+    coverImage: project.coverImage,
+    order: project.order,
+    published: project.published,
+    muralSections: project.muralSections as MuralSection[],
+  }));
 }
 
 export async function getAllProjectsIncludingDrafts(): Promise<ProjectData[]> {
