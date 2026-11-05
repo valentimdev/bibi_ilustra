@@ -2,10 +2,12 @@ import type { Metadata } from 'next';
 import './globals.css';
 import AppShell from '@/components/AppShell';
 import { Analytics } from '@vercel/analytics/next';
+import { SITE_DESCRIPTION, SITE_NAME } from '@/lib/site';
 
 export const metadata: Metadata = {
-  title: 'Bibi Ilustra',
-  description: 'Portfólio de ilustrações e design gráfico de Bibi',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+  title: { default: SITE_NAME, template: `%s — ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
   icons: {
     icon: '/icon.svg',
     shortcut: '/icon.svg',

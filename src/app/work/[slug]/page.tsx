@@ -1,14 +1,19 @@
 // src/app/work/[slug]/page.tsx
 
 import Image from 'next/image';
+import type { Metadata } from 'next';
+import { cache } from 'react';
 import { notFound, redirect } from 'next/navigation';
 import {
   getCachedPublishedSlugs,
-  getProjectBySlug,
+  getProjectBySlug as fetchProjectBySlug,
   getPublishedSlugs,
   isValidSlug,
   normalizeProjectSlug,
+  type ProjectData,
 } from '@/lib/projectData';
+import { isVideoUrl } from '@/lib/media';
+import { SITE_DESCRIPTION } from '@/lib/site';
 import Link from 'next/link';
 import ProjectMural from '@/components/ProjectMural';
 
@@ -17,6 +22,91 @@ type ProjectPageProps = {
     slug: string;
   }>;
 };
+
+// Deduplica a consulta entre generateMetadata e a página no mesmo render.
+const getProjectBySlug = cache(fetchProjectBySlug);
+
+// Mesmas proteções da página: slug com formato válido e presente na lista
+// em cache de publicados. Só então consulta o projeto.
+async function findPublishedProject(slug: string): Promise<ProjectData | null> {
+  const normalizedSlug = normalizeProjectSlug(slug);
+  if (!isValidSlug(normalizedSlug)) return null;
+
+  const publishedSlugs = await getCachedPublishedSlugs();
+  if (!publishedSlugs.includes(normalizedSlug)) return null;
+
+  const project = await getProjectBySlug(normalizedSlug);
+  return project && project.published ? project : null;
+}
+
+// Primeira imagem que não é vídeo: capa, depois a apresentação (primeira
+// seção "full"), depois qualquer imagem do mural.
+function pickShareImage(project: ProjectData): string | undefined {
+  const isImage = (url?: string) => !!url && !isVideoUrl(url);
+
+  if (isImage(project.coverImage)) return project.coverImage;
+
+  const firstFull = project.muralSections.find((s) => s.type === 'full');
+  if (firstFull?.type === 'full' && isImage(firstFull.imageUrl)) {
+    return firstFull.imageUrl;
+  }
+
+  for (const section of project.muralSections) {
+    const urls =
+      section.type === 'full'
+        ? [section.imageUrl]
+        : section.type === 'split' || section.type === 'trio'
+          ? section.imagesUrl
+          : [];
+    const found = urls.find(isImage);
+    if (found) return found;
+  }
+
+  return undefined;
+}
+
+function truncate(text: string, max = 160): string {
+  const clean = text.replace(/\s+/g, ' ').trim();
+  if (clean.length <= max) return clean;
+  const cut = clean.slice(0, max - 1);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut) + '…';
+}
+
+export async function generateMetadata({
+  params,
+}: ProjectPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const project = await findPublishedProject(slug);
+
+  if (!project) {
+    return { title: 'Projeto não encontrado' };
+  }
+
+  const description = truncate(project.description) || SITE_DESCRIPTION;
+  const url = `/work/${project.slug}`;
+  const image = pickShareImage(project);
+  const images = image ? [{ url: image, alt: project.title }] : undefined;
+
+  return {
+    title: project.title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: project.title,
+      description,
+      url,
+      type: 'article',
+      images,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: project.title,
+      description,
+      images: image ? [image] : undefined,
+    },
+  };
+}
 
 // Gera no build as páginas dos projetos publicados. Projetos novos continuam
 // funcionando sem novo build, porque dynamicParams fica no padrão (true).
