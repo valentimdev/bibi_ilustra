@@ -155,6 +155,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           alt={hero.alt || project.title}
           title={project.title}
           date={project.date}
+          width={hero.width}
+          height={hero.height}
         />
       )}
 

@@ -6,6 +6,7 @@ type LazyVideoProps = {
   src: string;
   className?: string;
   poster?: string;
+  style?: React.CSSProperties;
   onLoadedData?: React.ReactEventHandler<HTMLVideoElement>;
 };
 
@@ -18,6 +19,7 @@ export default function LazyVideo({
   src,
   className,
   poster,
+  style,
   onLoadedData,
 }: LazyVideoProps) {
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
@@ -76,6 +78,7 @@ export default function LazyVideo({
       ref={videoRef}
       src={videoSrc}
       className={className}
+      style={style}
       poster={poster}
       muted
       loop

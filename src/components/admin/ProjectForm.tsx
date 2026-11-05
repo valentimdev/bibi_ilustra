@@ -10,7 +10,7 @@ import {
   VIDEO_LIMITS,
   VideoConversionCanceledError,
 } from '@/lib/videoUtils';
-import { isVideoUrl } from '@/lib/media';
+import { getMediaDimensions, isVideoUrl } from '@/lib/media';
 import { useRef, useState } from 'react';
 import type { ProjectData, MuralSection } from '@/lib/projectData';
 import { uploadImage } from '@/lib/blob';
@@ -350,9 +350,12 @@ export default function ProjectForm({
       const section = formData.muralSections[sectionIndex];
 
       if (section.type === 'full') {
+        const dimensions = await getMediaDimensions(fileToUpload);
         handleSectionChange(sectionIndex, {
           ...section,
           imageUrl: result.url,
+          width: dimensions?.width,
+          height: dimensions?.height,
         });
       } else if (section.type === 'split' || section.type === 'trio') {
         const newImagesUrl = [...section.imagesUrl];

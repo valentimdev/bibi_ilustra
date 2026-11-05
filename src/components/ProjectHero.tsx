@@ -9,6 +9,8 @@ type ProjectHeroProps = {
   alt: string;
   title: string;
   date: string;
+  width?: number;
+  height?: number;
 };
 
 // Altura máxima: a tela menos o header do site (120 px), para o título,
@@ -20,11 +22,23 @@ const MEDIA_CLASS =
 // ponta. No computador, o título e a data ficam por cima do rodapé da arte,
 // sobre um degradê. No celular, a página mostra o título abaixo da arte.
 // As margens negativas anulam o padding lateral do <main> (AppShell).
-export default function ProjectHero({ src, alt, title, date }: ProjectHeroProps) {
+export default function ProjectHero({
+  src,
+  alt,
+  title,
+  date,
+  width,
+  height,
+}: ProjectHeroProps) {
+  // Com as dimensões gravadas no upload, o espaço da capa já é reservado
+  // antes de a mídia carregar, e a página não pula.
+  const sizeStyle =
+    width && height ? { aspectRatio: `${width} / ${height}` } : undefined;
+
   return (
     <div className="relative -mx-8 sm:-mx-12 lg:-mx-16 overflow-hidden bg-neutral-900">
       {isVideoUrl(src) ? (
-        <LazyVideo src={src} className={MEDIA_CLASS} />
+        <LazyVideo src={src} className={MEDIA_CLASS} style={sizeStyle} />
       ) : (
         <ArtworkImage
           unoptimized
@@ -36,6 +50,7 @@ export default function ProjectHero({ src, alt, title, date }: ProjectHeroProps)
           sizes="100vw"
           loadingVariant="blur-only"
           className={MEDIA_CLASS}
+          style={sizeStyle}
         />
       )}
 

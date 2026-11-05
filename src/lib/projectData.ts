@@ -5,7 +5,15 @@ import path from 'path';
 import { unstable_cache } from 'next/cache';
 import prisma from './db';
 
-type MuralSectionFull = { type: 'full'; imageUrl: string; alt: string };
+type MuralSectionFull = {
+  type: 'full';
+  imageUrl: string;
+  alt: string;
+  // Dimensões da arte, gravadas no upload, para reservar o espaço na página
+  // antes de a imagem ou o vídeo carregar (evita o pulo de layout).
+  width?: number;
+  height?: number;
+};
 type MuralSectionSplit = {
   type: 'split';
   imagesUrl: [string, string];
