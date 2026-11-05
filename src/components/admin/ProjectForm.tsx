@@ -109,6 +109,13 @@ export default function ProjectForm({
     setNotices((prev) => ({ ...prev, [key]: message }));
 
   const cancelConversion = () => cancelRef.current?.abort();
+
+  // A primeira seção, quando é "full" (imagem ou vídeo), é a capa do projeto
+  // (imagem de apresentação). Ela é editada no bloco próprio, fora da lista.
+  const presentationSection =
+    formData.muralSections[0]?.type === 'full' ? formData.muralSections[0] : null;
+  const muralEditorStartIndex = presentationSection ? 1 : 0;
+
   const handleInputChange = (field: keyof ProjectData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -255,6 +262,66 @@ export default function ProjectForm({
     }
   };
 
+  const updatePresentationSection = (
+    values: Partial<Extract<MuralSection, { type: 'full' }>>
+  ) => {
+    setFormData((prev) => {
+      const currentFirstSection = prev.muralSections[0];
+      const hasPresentationSection = currentFirstSection?.type === 'full';
+      const presentation =
+        currentFirstSection?.type === 'full'
+          ? currentFirstSection
+          : { type: 'full' as const, imageUrl: '', alt: '' };
+
+      return {
+        ...prev,
+        muralSections:
+          hasPresentationSection
+            ? [{ ...presentation, ...values }, ...prev.muralSections.slice(1)]
+            : [{ ...presentation, ...values }, ...prev.muralSections],
+      };
+    });
+  };
+
+  const handlePresentationImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading('presentation');
+    try {
+      const fileToUpload = await prepareFile(file, 'muralPresentation', 'presentation');
+      if (!fileToUpload) return;
+      setFileSizes((prev) => ({ ...prev, presentation: fileToUpload.size }));
+      const folder = `projects/${formData.slug || 'temp'}`;
+      const result = await uploadImage(fileToUpload, folder);
+      const dimensions = await getMediaDimensions(fileToUpload);
+      updatePresentationSection({
+        imageUrl: result.url,
+        alt: presentationSection?.alt || formData.title || 'Imagem de apresentação',
+        width: dimensions?.width,
+        height: dimensions?.height,
+      });
+    } catch (error) {
+      console.error('Erro ao fazer upload:', error);
+      alert('Erro ao fazer upload da imagem de apresentação');
+    } finally {
+      setUploading(null);
+      e.target.value = '';
+    }
+  };
+
+  const handleRemovePresentationImage = () => {
+    setFormData((prev) => ({
+      ...prev,
+      muralSections:
+        prev.muralSections[0]?.type === 'full'
+          ? prev.muralSections.slice(1)
+          : prev.muralSections,
+    }));
+  };
+
   const handleAddSection = (type: MuralSection['type']) => {
     let newSection: MuralSection;
 
@@ -295,15 +362,17 @@ export default function ProjectForm({
   };
 
   const handleMoveSection = (index: number, direction: 'up' | 'down') => {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+
     if (
-      (direction === 'up' && index === 0) ||
-      (direction === 'down' && index === formData.muralSections.length - 1)
+      (direction === 'up' && index <= muralEditorStartIndex) ||
+      (direction === 'down' && index === formData.muralSections.length - 1) ||
+      targetIndex < muralEditorStartIndex
     ) {
       return;
     }
 
     const newSections = [...formData.muralSections];
-    const targetIndex = direction === 'up' ? index - 1 : index + 1;
     
     // Trocar posições
     [newSections[index], newSections[targetIndex]] = [
@@ -337,12 +406,7 @@ export default function ProjectForm({
 
     setUploading(key);
     try {
-      // A primeira seção, se for "full", é o header do projeto.
-      const preset: ImagePresetName =
-        sectionIndex === 0 && formData.muralSections[0]?.type === 'full'
-          ? 'muralPresentation'
-          : 'muralSection';
-      const fileToUpload = await prepareFile(file, preset, key);
+      const fileToUpload = await prepareFile(file, 'muralSection', key);
       if (!fileToUpload) return;
       setFileSizes((prev) => ({ ...prev, [key]: fileToUpload.size }));
       const folder = `projects/${formData.slug || 'temp'}`;
@@ -590,6 +654,74 @@ export default function ProjectForm({
             <p className="text-sm text-gray-500">Uploading...</p>
           )}
         </div>
+
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <div className="mb-4 flex items-start justify-between gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Imagem de apresentação do mural
+              </label>
+              <p className="mt-1 text-xs text-gray-500">
+                Aparece no topo do projeto como capa, em largura total, com o título, a data, o
+                tipo e a descrição por cima (no celular, eles ficam abaixo). Aceita imagem ou
+                vídeo. Prefira artes horizontais (por exemplo, 1640 × 624 px); artes mais altas
+                que a tela perdem um pouco em cima e embaixo, e o rodapé fica escurecido para o
+                texto ficar legível.
+              </p>
+            </div>
+            {presentationSection?.imageUrl && (
+              <button
+                type="button"
+                onClick={handleRemovePresentationImage}
+                className="cursor-pointer text-sm font-medium text-red-600 hover:text-red-800"
+              >
+                Remover
+              </button>
+            )}
+          </div>
+
+          <input
+            type="file"
+            accept="image/*,video/mp4,video/webm"
+            onChange={handlePresentationImageUpload}
+            className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md"
+            disabled={uploading === 'presentation'}
+          />
+          <UploadStatus
+            uploadKey="presentation"
+            conversion={conversion}
+            notice={notices.presentation}
+            onCancel={cancelConversion}
+          />
+          {fileSizes.presentation && (
+            <p className="mt-1 text-sm text-gray-500">
+              Tamanho: {formatFileSize(fileSizes.presentation)}
+            </p>
+          )}
+          {uploading === 'presentation' && (
+            <p className="text-sm text-gray-500">Uploading...</p>
+          )}
+
+          {presentationSection?.imageUrl && (
+            <div className="mt-4 space-y-3">
+              <MediaPreview
+                src={presentationSection.imageUrl}
+                className="h-56 w-full rounded-md object-cover"
+              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Alt Text da apresentação
+                </label>
+                <input
+                  type="text"
+                  value={presentationSection.alt}
+                  onChange={(e) => updatePresentationSection({ alt: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+              </div>
+            </div>
+          )}
+        </div>
         
         <div className="flex items-center">
           <input
@@ -611,14 +743,7 @@ export default function ProjectForm({
       {/* Seções do Mural */}
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <div>
-            <h2 className="text-xl font-semibold">Seções do Mural</h2>
-            <p className="text-sm text-gray-600 mt-1">
-              Se a <strong>primeira seção</strong> for do tipo <strong>Full</strong>, ela
-              vira a <strong>capa do projeto</strong>: aparece no topo da página, em largura
-              cheia, com o título por cima.
-            </p>
-          </div>
+          <h2 className="text-xl font-semibold">Seções do Mural</h2>
           <div className="flex gap-2">
             <button
               type="button"
@@ -651,26 +776,33 @@ export default function ProjectForm({
           </div>
         </div>
 
-        {formData.muralSections.map((section, index) => (
-          <SectionEditor
-            key={index}
-            section={section}
-            index={index}
-            totalSections={formData.muralSections.length}
-            onChange={(s) => handleSectionChange(index, s)}
-            onRemove={() => handleRemoveSection(index)}
-            onMove={(direction) => handleMoveSection(index, direction)}
-            onImageUpload={(imgIndex, file) =>
-              handleImageUpload(index, imgIndex, file)
-            }
-            uploading={uploading}
-            fileSizes={fileSizes}
-            formatFileSize={formatFileSize}
-            conversion={conversion}
-            notices={notices}
-            onCancelConversion={cancelConversion}
-          />
-        ))}
+        {formData.muralSections
+          .slice(muralEditorStartIndex)
+          .map((section, sectionOffset) => {
+            const index = sectionOffset + muralEditorStartIndex;
+
+            return (
+              <SectionEditor
+                key={index}
+                section={section}
+                index={index}
+                minIndex={muralEditorStartIndex}
+                totalSections={formData.muralSections.length}
+                onChange={(s) => handleSectionChange(index, s)}
+                onRemove={() => handleRemoveSection(index)}
+                onMove={(direction) => handleMoveSection(index, direction)}
+                onImageUpload={(imgIndex, file) =>
+                  handleImageUpload(index, imgIndex, file)
+                }
+                uploading={uploading}
+                fileSizes={fileSizes}
+                formatFileSize={formatFileSize}
+                conversion={conversion}
+                notices={notices}
+                onCancelConversion={cancelConversion}
+              />
+            );
+          })}
       </div>
 
       {/* Botões */}
@@ -698,6 +830,7 @@ export default function ProjectForm({
 function SectionEditor({
   section,
   index,
+  minIndex,
   totalSections,
   onChange,
   onRemove,
@@ -712,6 +845,7 @@ function SectionEditor({
 }: {
   section: MuralSection;
   index: number;
+  minIndex: number;
   totalSections: number;
   onChange: (section: MuralSection) => void;
   onRemove: () => void;
@@ -742,7 +876,7 @@ function SectionEditor({
           <button
             type="button"
             onClick={() => onMove('up')}
-            disabled={index === 0}
+            disabled={index <= minIndex}
             className="text-gray-400 hover:text-gray-700 disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer"
             title="Mover para cima"
           >
@@ -778,16 +912,6 @@ function SectionEditor({
     return (
       <div className="border border-gray-200 rounded-lg p-4 bg-white">
         <SectionHeader title={`Seção Full #${index + 1}`} />
-        {index === 0 && (
-          <div className="mb-4 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800">
-            <strong>Capa do projeto.</strong> Esta arte aparece no topo da página, em largura
-            cheia, com o título e a data por cima do rodapé dela (no celular, eles ficam
-            abaixo). Prefira artes <strong>horizontais</strong> (por exemplo, 1640 × 624 px),
-            que aparecem inteiras. Artes mais altas que a tela perdem um pouco em cima e
-            embaixo, e o rodapé fica escurecido para o título ficar legível: evite deixar
-            detalhes importantes nas bordas.
-          </div>
-        )}
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">

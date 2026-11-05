@@ -23,7 +23,8 @@ const MEDIA_CLASS =
 // Primeira arte do projeto, como capa da página: largura cheia, de ponta a
 // ponta. No computador, o título e a data ficam por cima do rodapé da arte,
 // sobre um degradê. No celular, a página mostra o título abaixo da arte.
-// As margens negativas anulam o padding lateral do <main> (AppShell).
+// As margens negativas anulam o padding lateral do <main> (AppShell:
+// px-0 sm:px-4 lg:px-8).
 export default function ProjectHero({
   src,
   alt,
@@ -39,7 +40,7 @@ export default function ProjectHero({
     width && height ? { aspectRatio: `${width} / ${height}` } : undefined;
 
   return (
-    <div className="relative -mx-8 sm:-mx-12 lg:-mx-16 overflow-hidden bg-neutral-900">
+    <div className="relative sm:-mx-4 lg:-mx-8 overflow-hidden bg-neutral-900">
       {isVideoUrl(src) ? (
         <LazyVideo src={src} className={MEDIA_CLASS} style={sizeStyle} />
       ) : (
@@ -60,12 +61,12 @@ export default function ProjectHero({
       <Link
         href="/"
         aria-label="Voltar para os projetos"
-        className="absolute left-12 lg:left-16 top-6 hidden md:flex h-12 w-12 items-center justify-center rounded-full bg-white/85 shadow-md backdrop-blur-sm transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+        className="absolute left-4 lg:left-8 top-6 hidden md:flex h-12 w-12 items-center justify-center rounded-full bg-white/85 shadow-md backdrop-blur-sm transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
       >
         <Image src="/icons/arrow-badge-left.svg" alt="" width={28} height={28} />
       </Link>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden md:block bg-gradient-to-t from-black/80 via-black/40 to-transparent px-12 lg:px-16 pb-10 pt-40">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden md:block bg-gradient-to-t from-black/80 via-black/40 to-transparent px-4 lg:px-8 pb-10 pt-40">
         <h1 className="max-w-4xl text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.35)]">
           {title}
         </h1>

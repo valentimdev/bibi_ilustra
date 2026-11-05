@@ -32,7 +32,7 @@ export default function ProjectBody({ description, sections }: ProjectBodyProps)
     <div className={fraunces.variable}>
       {description ? (
         <>
-          <div className="relative z-10 pt-2 pb-12 md:p-0 md:h-0">
+          <div className="relative z-10 px-4 pt-2 pb-12 md:p-0 md:h-0">
             <div className="[text-wrap:pretty] md:absolute md:right-0 md:bottom-10 md:max-w-[30em]">
               {paragraphs(description).map((p, i) => (
                 <p

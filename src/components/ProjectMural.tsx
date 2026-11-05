@@ -45,7 +45,7 @@ function ClickableArtwork({
     <button
       type="button"
       onClick={() => onOpen({ src, alt, type: 'image' })}
-      className="block h-full w-full cursor-zoom-in focus:outline-none focus:ring-0"
+      className="relative block h-full w-full cursor-zoom-in focus:outline-none focus:ring-0"
       aria-label={`Ampliar imagem: ${alt}`}
     >
       <ArtworkImage
@@ -86,6 +86,95 @@ function ClickableVideo({
         onLoadedData={() => markMediaAsLoaded(src)}
       />
     </button>
+  );
+}
+
+function LightboxArtworkImage({
+  media,
+  isZoomed,
+}: {
+  media: LightboxMedia;
+  isZoomed: boolean;
+}) {
+  const imageRef = React.useRef<HTMLImageElement | null>(null);
+  const [shouldFadeIn, setShouldFadeIn] = React.useState(
+    () => !hasLoadedMedia(media.src)
+  );
+
+  React.useLayoutEffect(() => {
+    const image = imageRef.current;
+
+    if (hasLoadedMedia(media.src) || (image?.complete && image.naturalWidth > 0)) {
+      markMediaAsLoaded(media.src);
+      setShouldFadeIn(false);
+    } else {
+      setShouldFadeIn(true);
+    }
+  }, [media.src]);
+
+  return (
+    <Image
+      unoptimized
+      ref={imageRef}
+      src={media.src}
+      alt={media.alt}
+      width={1800}
+      height={1800}
+      sizes="100vw"
+      className={[
+        'h-auto w-auto object-contain transition-[width,max-width,max-height] duration-300 ease-out',
+        isZoomed
+          ? 'max-h-none max-w-none w-[190vw] md:w-[150vw]'
+          : 'max-h-[96vh] max-w-[96vw]',
+        shouldFadeIn ? 'animate-fade-in' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      onLoad={() => markMediaAsLoaded(media.src)}
+    />
+  );
+}
+
+function LightboxVideo({ media }: { media: LightboxMedia }) {
+  const videoRef = React.useRef<HTMLVideoElement | null>(null);
+  const [shouldFadeIn, setShouldFadeIn] = React.useState(
+    () => !hasLoadedMedia(media.src)
+  );
+
+  React.useLayoutEffect(() => {
+    const video = videoRef.current;
+
+    if (hasLoadedMedia(media.src) || (video && video.readyState >= 2)) {
+      markMediaAsLoaded(media.src);
+      setShouldFadeIn(false);
+    } else {
+      setShouldFadeIn(true);
+    }
+  }, [media.src]);
+
+  return (
+    <video
+      ref={videoRef}
+      src={media.src}
+      className={[
+        'h-auto w-auto max-h-[96vh] max-w-[96vw] object-contain',
+        shouldFadeIn ? 'animate-fade-in' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      loop
+      playsInline
+      autoPlay
+      muted
+      tabIndex={-1}
+      onClick={(event) => event.stopPropagation()}
+      onLoadedData={() => markMediaAsLoaded(media.src)}
+      onKeyDown={(event) => {
+        if (event.key === ' ') {
+          event.preventDefault();
+        }
+      }}
+    />
   );
 }
 
@@ -130,6 +219,8 @@ export default function ProjectMural({ sections }: ProjectMuralProps) {
     setLightboxMedia(null);
   }, []);
 
+  // A primeira arte (capa) já sai da lista na página (ProjectHero);
+  // aqui vem só o mural.
   return (
     <>
       <div className="space-y-1  mb-10 ">
@@ -218,12 +309,12 @@ export default function ProjectMural({ sections }: ProjectMuralProps) {
 
       {lightboxMedia && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-2 md:p-4"
+          className="fixed inset-0 z-[100] overflow-auto bg-black/90"
           onClick={closeLightbox}
         >
           <button
             type="button"
-            className="absolute right-4 top-3 z-[101] text-5xl leading-none text-[var(--primary)] cursor-pointer"
+            className="fixed right-4 top-3 z-[101] text-5xl leading-none text-[var(--primary)] cursor-pointer"
             onClick={closeLightbox}
             aria-label="Fechar imagem ampliada"
           >
@@ -231,19 +322,28 @@ export default function ProjectMural({ sections }: ProjectMuralProps) {
           </button>
 
           <div
-            className="relative flex h-[96vh] w-[96vw] items-center justify-center"
-            onClick={(event) => event.stopPropagation()}
+            className={[
+              'relative flex min-h-screen min-w-full p-2 md:p-4',
+              isZoomed
+                ? 'items-start justify-center'
+                : 'items-center justify-center',
+            ]
+              .filter(Boolean)
+              .join(' ')}
           >
             {lightboxMedia.type === 'image' ? (
               <button
                 type="button"
                 className={[
-                  'flex h-full w-full items-center justify-center cursor-zoom-in overflow-auto focus:outline-none focus:ring-0',
+                  'inline-flex items-center justify-center cursor-zoom-in focus:outline-none focus:ring-0',
                   isZoomed ? 'cursor-zoom-out' : '',
                 ]
                   .filter(Boolean)
                   .join(' ')}
-                onClick={() => setIsZoomed((current) => !current)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIsZoomed((current) => !current);
+                }}
                 onKeyDown={(event) => {
                   if (event.key === ' ' || event.key === 'Enter') {
                     event.preventDefault();
@@ -251,40 +351,13 @@ export default function ProjectMural({ sections }: ProjectMuralProps) {
                 }}
                 aria-label={isZoomed ? 'Reduzir zoom da imagem' : 'Aumentar zoom da imagem'}
               >
-                <Image
-                  unoptimized
-                  src={lightboxMedia.src}
-                  alt={lightboxMedia.alt}
-                  width={1800}
-                  height={1800}
-                  sizes="100vw"
-                  className={[
-                    'max-h-full max-w-full object-contain transition-transform duration-300 ease-out',
-                    hasLoadedMedia(lightboxMedia.src) ? '' : 'animate-fade-in',
-                    isZoomed ? 'scale-[1.9]' : 'scale-100',
-                  ].join(' ')}
-                  onLoad={() => markMediaAsLoaded(lightboxMedia.src)}
+                <LightboxArtworkImage
+                  media={lightboxMedia}
+                  isZoomed={isZoomed}
                 />
               </button>
             ) : (
-              <video
-                src={lightboxMedia.src}
-                className={[
-                  'max-h-full max-w-full object-contain',
-                  hasLoadedMedia(lightboxMedia.src) ? '' : 'animate-fade-in',
-                ].join(' ')}
-                loop
-                playsInline
-                autoPlay
-                muted
-                tabIndex={-1}
-                onLoadedData={() => markMediaAsLoaded(lightboxMedia.src)}
-                onKeyDown={(event) => {
-                  if (event.key === ' ') {
-                    event.preventDefault();
-                  }
-                }}
-              />
+              <LightboxVideo media={lightboxMedia} />
             )}
           </div>
         </div>
