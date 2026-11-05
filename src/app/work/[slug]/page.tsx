@@ -15,7 +15,7 @@ import {
 import { isVideoUrl } from '@/lib/media';
 import { SITE_DESCRIPTION } from '@/lib/site';
 import Link from 'next/link';
-import ProjectMural from '@/components/ProjectMural';
+import ProjectBody from '@/components/ProjectBody';
 import ProjectHero from '@/components/ProjectHero';
 
 type ProjectPageProps = {
@@ -160,7 +160,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         />
       )}
 
-      <header className={`text-center mx-auto ${hero ? 'pt-6 pb-4 md:pt-10' : 'py-4'}`}>
+      <header className={`text-center mx-auto ${hero ? 'pt-6 md:hidden' : 'py-4'}`}>
         <div className={`flex items-center justify-center relative ${hero ? 'md:hidden' : ''}`}>
           <div className="absolute left-0 hidden md:block">
             <Link href="/">
@@ -186,15 +186,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <p className={`mt-2 text-base sm:text-lg text-gray-500 ${hero ? 'md:hidden' : ''}`}>{project.date}</p>
           
       
-        
-        <div className="flex px-0 pt-3 md:px-20">
-        <p className="mx-auto max-w-none text-center text-base leading-7 text-gray-800 md:mt-2 md:text-xl md:text-justify">
-          {project.description}
-        </p>
-        </div>
       </header>
 
-      <ProjectMural sections={muralSections} />
+      <ProjectBody
+        description={project.description}
+        category={project.category}
+        date={project.date}
+        sections={muralSections}
+      />
     </section>
   );
 }
