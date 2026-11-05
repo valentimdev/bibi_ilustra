@@ -3,12 +3,14 @@ import Link from 'next/link';
 import ArtworkImage from '@/components/ArtworkImage';
 import LazyVideo from '@/components/LazyVideo';
 import { isVideoUrl } from '@/lib/media';
+import ProjectSubtitle from '@/components/ProjectSubtitle';
 
 type ProjectHeroProps = {
   src: string;
   alt: string;
   title: string;
   date: string;
+  category: string;
   width?: number;
   height?: number;
 };
@@ -27,6 +29,7 @@ export default function ProjectHero({
   alt,
   title,
   date,
+  category,
   width,
   height,
 }: ProjectHeroProps) {
@@ -66,9 +69,11 @@ export default function ProjectHero({
         <h1 className="max-w-4xl text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.35)]">
           {title}
         </h1>
-        {date && (
-          <p className="mt-3 text-lg text-[var(--accent)]">{date}</p>
-        )}
+        <ProjectSubtitle
+          date={date}
+          category={category}
+          className="mt-3 text-lg text-[var(--accent)]"
+        />
       </div>
     </div>
   );

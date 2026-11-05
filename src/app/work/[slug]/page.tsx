@@ -16,6 +16,7 @@ import { isVideoUrl } from '@/lib/media';
 import { SITE_DESCRIPTION } from '@/lib/site';
 import Link from 'next/link';
 import ProjectBody from '@/components/ProjectBody';
+import ProjectSubtitle from '@/components/ProjectSubtitle';
 import ProjectHero from '@/components/ProjectHero';
 
 type ProjectPageProps = {
@@ -155,6 +156,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           alt={hero.alt || project.title}
           title={project.title}
           date={project.date}
+          category={project.category}
           width={hero.width}
           height={hero.height}
         />
@@ -183,15 +185,17 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </h1>
           </div>
         </div>
-            <p className={`mt-2 text-base sm:text-lg text-gray-500 ${hero ? 'md:hidden' : ''}`}>{project.date}</p>
+            <ProjectSubtitle
+              date={project.date}
+              category={project.category}
+              className="mt-2 text-base sm:text-lg text-gray-500"
+            />
           
       
       </header>
 
       <ProjectBody
         description={project.description}
-        category={project.category}
-        date={project.date}
         sections={muralSections}
       />
     </section>

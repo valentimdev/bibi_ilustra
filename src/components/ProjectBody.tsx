@@ -1,17 +1,18 @@
 import ProjectMural from '@/components/ProjectMural';
+import { fraunces } from '@/lib/fonts';
 import type { MuralSection } from '@/lib/projectData';
-
-const CATEGORY_LABELS: Record<string, string> = {
-  design: 'Design',
-  ilustracao: 'Ilustração',
-};
 
 type ProjectBodyProps = {
   description: string;
-  category: string;
-  date: string;
   sections: MuralSection[];
 };
+
+// Fraunces com serifas suavizadas (SOFT), peso leve para texto claro no escuro.
+const SERIF = {
+  fontFamily: 'var(--font-fraunces), Georgia, serif',
+  fontVariationSettings: '"SOFT" 40',
+  fontWeight: 350,
+} as const;
 
 function paragraphs(text: string) {
   return text
@@ -20,48 +21,38 @@ function paragraphs(text: string) {
     .filter(Boolean);
 }
 
-// Descrição do projeto no formato "ficha + texto": ficha curta à esquerda
-// (tipo e data), separada por uma linha, e o texto à direita. No celular, a
-// ficha fica em cima do texto. Depois vem o mural.
-export default function ProjectBody({
-  description,
-  category,
-  date,
-  sections,
-}: ProjectBodyProps) {
-  const facts = [
-    { label: 'Tipo', value: CATEGORY_LABELS[category] ?? category },
-    ...(date ? [{ label: 'Data', value: date }] : []),
-  ];
-
+// Descrição do projeto.
+// - Computador: texto branco sobre o degradê da capa, no canto inferior
+//   direito, ao lado do título. O bloco tem altura zero e o texto é ancorado
+//   pela base na borda inferior da capa, crescendo para cima (nunca vaza).
+// - Celular: abaixo do título, em texto escuro.
+// Depois vem o mural.
+export default function ProjectBody({ description, sections }: ProjectBodyProps) {
   return (
-    <>
-      {description && (
-        <div className="pt-4 pb-12 md:pt-12 md:pb-16">
-          <div className="grid gap-6 text-left md:grid-cols-[13rem_1fr] md:gap-14">
-            <dl className="flex gap-8 md:flex-col md:gap-5 md:border-r md:border-gray-300 md:pr-8">
-              {facts.map((f) => (
-                <div key={f.label}>
-                  <dt className="text-sm text-gray-500">{f.label}</dt>
-                  <dd className="text-base font-semibold text-gray-900">{f.value}</dd>
-                </div>
-              ))}
-            </dl>
-            <div className="max-w-5xl text-gray-800">
+    <div className={fraunces.variable}>
+      {description ? (
+        <>
+          <div className="relative z-10 pt-2 pb-12 md:p-0 md:h-0">
+            <div className="[text-wrap:pretty] md:absolute md:right-0 md:bottom-10 md:max-w-[30em]">
               {paragraphs(description).map((p, i) => (
                 <p
                   key={i}
-                  className={`${i ? 'mt-5' : ''} text-base md:text-xl leading-relaxed md:leading-[1.65]`}
+                  className={`${i ? 'mt-4' : ''} text-[1.05rem] leading-[1.5] text-gray-800 md:text-white md:[text-shadow:0_1px_8px_rgba(0,0,0,0.5)]`}
+                  style={SERIF}
                 >
                   {p}
                 </p>
               ))}
             </div>
           </div>
-        </div>
+          {/* Espaçador: uma margem num bloco de altura zero "vazaria" para cima. */}
+          <div className="hidden md:block h-14" />
+        </>
+      ) : (
+        <div className="pt-4 md:pt-10" />
       )}
 
       <ProjectMural sections={sections} />
-    </>
+    </div>
   );
 }
